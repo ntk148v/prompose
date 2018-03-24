@@ -1,22 +1,60 @@
 groups:
-- name: example
+- name: targets
   rules:
-
-  # Alert for any instance that is unreachable for >5 minutes.
-  - alert: service_down
+  - alert: monitor_service_down
     expr: up == 0
-    for: 2m
+    for: 1m
     labels:
       severity: page
     annotations:
-      summary: "Instance {{ $labels.instance }} down"
-      description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 2 minutes."
+      summary: "Monitor instance {{ $labels.instance }} down, non-operational"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute."
 
-  - alert: high_load
-    expr: node_load1 > 0.5
-    for: 2m
+- name: host
+  rules:
+  - alert: high_cpu_load
+    expr: nope_load1 > 1.5
+    for: 1m
     labels:
-      severity: page
+      severity: warning
     annotations:
-      summary: "Instance {{ $labels.instance }} under high load"
-      description: "{{ $labels.instance }} of job {{ $labels.job }} is under high load."
+      summary: "Monitor instance {{ $labels.instance }} is under high load"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} is under high load, the avg load 1 minute is at {{ humanize $value }}."
+
+  - alert: high_memory_load
+    expr: nodeload1 > (sum(node_memory_MemTotal) - sum(node_memory_MemFree + node_memory_Buffers + node_memory_Cached)) / sum(node_memory_MemTotal) * 100 > 85
+    for: 30s
+    labels:
+      severity: warning
+    annotations:
+      summary: "Monitor instance {{ $labels.instance }} is out of memory"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} is out of memory, the memory usage 30 seconds is {{ humanize $value }}"
+
+- name: containers
+  rules:
+  - alert: gitlab_down
+    expr: absent(container_memory_usage_bytes{name="gitlab"})
+    for: 30s
+    labels:
+      severity: critical
+    annotations:
+      summary: "Gitlab down"
+      description: "Gitlab container is down for more than 30 seconds."
+
+  - alert: gitlab_high_cpu
+    expr: sum(rate(container_cpu_usage_seconds_total{name="gitlab"}[1m])) / count(node_cpu{mode="system"}) * 100 / 10
+    for: 30s
+    labels:
+      severity: warning
+    annotations:
+      summary: "Gitlab high CPU usage"
+      description: "Gitlab CPU usage is {{ humanize $value }}"
+
+  - alert: gitlab_high_memory
+    expr: sum(container_memory_usage_bytes{name="gitlab"}) > 4294967296 # 4GB
+    for: 30s
+    labels:
+      severity: warning
+    annotations:
+      summary: "Gitlab high memory"
+      description: "Gitlab memory usage is {{ humanize $value }}"
