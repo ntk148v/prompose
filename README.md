@@ -19,7 +19,17 @@ Inspired by [stefanprodan/dockprom](https://github.com/stefanprodan/dockprom) & 
 * Run it!
 
 ```
+# Install controller node (which hosts prometheus, grafana, alertmanager...)
 $ ADMIN_USER=admin ADMIN_PASSWORD=changeyopasswd docker-compose up
+# Install target nodes
+$ docker-compose -f docker-compose.exporters.yml up -d
+```
+
+* *NOTE*: To use Docker private registry, for example with Docker registry host 10.69.96.69:6969/cloud/
+
+```
+$ ADMIN_USER=admin ADMIN_PASSWORD=changeyopasswd PRIVATE_REPO=10.69.96.69:6969 NAMESPACE=cloud docker-compose -f docker-compose.private-repos.yml up -d
+$ PRIVATE_REPO=10.69.96.69:6969 NAMESPACE=cloud docker-compose -f docker-compose.private-repos.exporters.yml up -d
 ```
 
 ## Setup Grafana
