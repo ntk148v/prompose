@@ -25,11 +25,16 @@ $ ADMIN_USER=admin ADMIN_PASSWORD=changeyopasswd docker-compose up
 $ docker-compose -f docker-compose.exporters.yml up -d
 ```
 
-* *NOTE*: To use Docker private registry, for example with Docker registry host 10.69.96.69:6969/cloud/
+* **NOTE**: To use Docker private registry, for example with Docker registry host 10.69.96.69:6969/cloud/
 
 ```
 $ ADMIN_USER=admin ADMIN_PASSWORD=changeyopasswd PRIVATE_REPO=10.69.96.69:6969 NAMESPACE=cloud docker-compose -f docker-compose.private-repos.yml up -d
 $ PRIVATE_REPO=10.69.96.69:6969 NAMESPACE=cloud docker-compose -f docker-compose.private-repos.exporters.yml up -d
+```
+* **NOTE**: In Docker version 17.05, we may face some problems with /sys/fs/cgroup/cpu,cpuacct (Failed to start container manager: inotify_add_watch /sys/fs/cgroup/cpuacct,cpu: no such file or directory): Run the following commands to live with it without upgrade Docker version:
+
+```
+$ mount -o remount,rw '/sys/fs/cgroup' && ln -s /sys/fs/cgroup/cpu,cpuacct /sys/fs/cgroup/cpuacct,cpu
 ```
 
 ## Setup Grafana
