@@ -78,8 +78,7 @@ services:
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
-      - /sys:/sys:ro # doesn't work on CentOS/RHEL Docker version 17.05
-      # - /sys/fs/cgroup/cpu,cpuacct:/sys/fs/cgroup/cpuacct,cpu # Uncomment it in CentOS/RHEL Docker
+      - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
       - /cgroup:/cgroup:ro # doesn't work on MacOS only for Linux
     restart: unless-stopped
