@@ -437,7 +437,7 @@
               "interval": "10s",
               "intervalFactor": 1,
               "legendFormat": "{{ name }}",
-              "metric": "container_memory_usage:sort_desc",
+              "metric": "container_memory_usage_bytes:sort_desc",
               "refId": "A",
               "step": 10
             }
