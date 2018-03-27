@@ -46,8 +46,6 @@ services:
   ceph_exporter:
     image: ${PRIVATE_REGISTRY}/${NAMESPACE}/ceph_exporter:1.1.0
     container_name: ceph_exporter
-    user: root
-    privileged: true
     volumes:
       - /etc/ceph:/etc/ceph
     ports:
