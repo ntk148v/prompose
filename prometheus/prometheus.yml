@@ -52,3 +52,12 @@ scrape_configs:
     
     static_configs:
       - targets: ['host_ip:9100']
+
+  # Uncomment it if you use docker-compose.ceph* file.
+  # - job_name: 'ceph_exporter'
+
+  #   # Override the global default and scrape targets from this job evert 5 seconds
+  #   scrape_interval: 5s
+
+  #   static_configs:
+  #     - targets: ['host_ip:9128']
