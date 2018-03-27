@@ -10,33 +10,33 @@ volumes:
 
 services:
   prometheus:
-      image: ${PRIVATE_REPO}/${NAMESPACE}/prometheus:v2.2.1
-    container_name: prometheus
-    volumes:
-      - ./prometheus/:/etc/prometheus/
-      - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--storage.tsdb.retention=200h'
-      - '--web.enable-lifecycle'
-    restart: unless-stopped
-    ports:
-      - 9090:9090
-    links:
-      - cadvisor:cadvisor
-      - alertmanager:alertmanager
-    depends_on:
-      - cadvisor
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
+      image: ${PRIVATE_REGISTRY}/${NAMESPACE}/prometheus:v2.2.1
+      container_name: prometheus
+      volumes:
+        - ./prometheus/:/etc/prometheus/
+        - prometheus_data:/prometheus
+      command:
+        - '--config.file=/etc/prometheus/prometheus.yml'
+        - '--storage.tsdb.path=/prometheus'
+        - '--web.console.libraries=/etc/prometheus/console_libraries'
+        - '--web.console.templates=/etc/prometheus/consoles'
+        - '--storage.tsdb.retention=200h'
+        - '--web.enable-lifecycle'
+      restart: unless-stopped
+      ports:
+        - 9090:9090
+      links:
+        - cadvisor:cadvisor
+        - alertmanager:alertmanager
+      depends_on:
+        - cadvisor
+      networks:
+        - monitor-net
+      labels:
+        org.label-schema.group: "monitoring"
   
   alertmanager:
-    image: ${PRIVATE_REPO}/${NAMESPACE}/alertmanager:v0.14.0
+    image: ${PRIVATE_REGISTRY}/${NAMESPACE}/alertmanager:v0.14.0
     container_name: alertmanager
     volumes: 
       - ./alertmanager/:/etc/alertmanager/
@@ -52,7 +52,7 @@ services:
       org.label-schema.group: "monitoring"
 
   node_exporter:
-    image: ${PRIVATE_REPO}/${NAMESPACE}/node-exporter:v0.15.2
+    image: ${PRIVATE_REGISTRY}/${NAMESPACE}/node-exporter:v0.15.2
     container_name: node_exporter
     user: root
     privileged: true
@@ -73,7 +73,7 @@ services:
       org.label-schema.group: "monitoring"
 
   cadvisor:
-    image: ${PRIVATE_REPO}/${NAMESPACE}/cadvisor:v0.28.3
+    image: ${PRIVATE_REGISTRY}/${NAMESPACE}/cadvisor:v0.28.3
     container_name: cadvisor
     volumes:
       - /:/rootfs:ro
@@ -90,7 +90,7 @@ services:
       org.label-schema.group: "monitoring"
 
   grafana:
-    image: ${PRIVATE_REPO}/${NAMESPACE}/grafana:5.0.3
+    image: ${PRIVATE_REGISTRY}/${NAMESPACE}/grafana:5.0.3
     container_name: grafana
     volumes:
       - grafana_data:/var/lib/grafana

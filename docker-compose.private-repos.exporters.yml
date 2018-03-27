@@ -6,7 +6,7 @@ networks:
 
 services:
   node_exporter:
-    image: ${PRIVATE_REPO}/${NAMESPACE}/node-exporter:v0.15.2
+    image: ${PRIVATE_REGISTRY}/${NAMESPACE}/node-exporter:v0.15.2
     container_name: node_exporter
     user: root
     privileged: true
@@ -27,7 +27,7 @@ services:
       org.label-schema.group: "monitoring"
 
   cadvisor:
-    image: ${PRIVATE_REPO}/${NAMESPACE}/cadvisor:v0.28.3
+    image: ${PRIVATE_REGISTRY}/${NAMESPACE}/cadvisor:v0.28.3
     container_name: cadvisor
     volumes:
       - /:/rootfs:ro
