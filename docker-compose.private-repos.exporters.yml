@@ -1,4 +1,8 @@
-version: '3'
+version: '3.1'
+
+networks:
+  monitor-net:
+    driver: bridge
 
 services:
   node_exporter:
@@ -17,7 +21,8 @@ services:
     restart: unless-stopped
     ports:
       - 9100:9100
-    network_mode: host
+    networks:
+      - monitor-net
     labels:
       org.label-schema.group: "monitoring"
 
@@ -33,7 +38,8 @@ services:
     restart: unless-stopped
     ports:
       - 8080:8080
-    network_mode: host
+    networks:
+      - monitor-net
     labels:
       org.label-schema.group: "monitoring"
 
