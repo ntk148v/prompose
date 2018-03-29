@@ -25,12 +25,19 @@ $ ADMIN_USER=admin ADMIN_PASSWORD=changeyopasswd docker-compose up
 $ docker-compose -f docker-compose.exporters.yml up -d
 ```
 
-* **NOTE**: To use Docker private registry, for example with Docker registry host 10.69.96.69:6969/cloud/
+* To use Docker private registry, for example with Docker registry host 10.69.96.69:6969/cloud/
 
 ```
 $ ADMIN_USER=admin ADMIN_PASSWORD=changeyopasswd PRIVATE_REGISTRY=10.69.96.69:6969 NAMESPACE=cloud docker-compose -f docker-compose.private-repos.yml up -d
 $ PRIVATE_REGISTRY=10.69.96.69:6969 NAMESPACE=cloud docker-compose -f docker-compose.private-repos.exporters.yml up -d
 ```
+
+* To use Telegram for alerting purpose, use docker-compose.telegram.* template, for example:
+
+```
+$ TELEGRAM_USER_ID=12345 TELEGRAM_TOKEN=XXXX docker-compose -f docker-compose.telegram.yml
+```
+
 * **NOTE**: In Docker version 17.05, we may face some problems with /sys/fs/cgroup/cpu,cpuacct (Failed to start container manager: inotify_add_watch /sys/fs/cgroup/cpuacct,cpu: no such file or directory): Run the following commands to live with it without upgrade Docker version:
 
 ```
