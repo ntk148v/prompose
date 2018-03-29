@@ -64,7 +64,7 @@ services:
       TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
     volumes:
       - telegram_bot_data:/data
-    network_mode:
+    networks:
       - monitor-net
     ports:
       - 109094:8080
