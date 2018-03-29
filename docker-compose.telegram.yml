@@ -38,10 +38,12 @@ services:
 
   telegram_bot:
     image: metalmatze/alertmanager-bot:0.2
+    container_name: telegram_bot
     depends_on:
       - alertmanager
     environment:
       ALERTMANAGER_URL: http://alertmanager_host:9093
+      LISTEN_ADDR: 0.0.0.0:8080
       BOLT_PATH: /data/bot.db
       STORE: bolt
       TELEGRAM_ADMIN: ${TELEGRAM_USER_ID}
