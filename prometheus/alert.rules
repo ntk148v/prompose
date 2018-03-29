@@ -42,7 +42,7 @@ groups:
       description: "Gitlab container is down for more than 30 seconds."
 
   - alert: gitlab_high_cpu
-    expr: sum(rate(container_cpu_usage_seconds_total{name="gitlab"}[1m])) / count(node_cpu{mode="system"}) * 100 / 10
+    expr: sum(rate(container_cpu_usage_seconds_total{name="gitlab"}[1m])) / count(node_cpu{mode="system"}) * 100 > 10
     for: 30s
     labels:
       severity: warning
