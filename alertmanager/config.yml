@@ -13,4 +13,4 @@ receivers:
   # - name: 'telegram'
   #   webhooks_config:
   #     - send_resolved: true
-  #       url: 'http://telegram_bot_host_ip:10094'
+  #       url: 'http://telegram_bot_host_ip:9194'

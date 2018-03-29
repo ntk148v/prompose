@@ -51,7 +51,7 @@ services:
     networks:
       - monitor-net
     ports:
-      - 109094:8080
+      - 9194:8080
   
   alertmanager:
     image: prom/alertmanager:v0.14.0
