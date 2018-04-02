@@ -1,0 +1,24 @@
+route: # Follow https://www.robustperception.io/sending-alert-notifications-to-multiple-destinations/
+  receiver: 'slack'
+  routes:
+    - match:
+        severity: page
+      continue: true
+      receiver: 'slack'
+    - match:
+        severity: page
+      receiver: 'telegram'
+
+receivers:
+  - name: 'slack'
+    slack_configs:
+      - send_resolved: true
+        text: "{{ .CommonAnnotations.description }}"
+        username: 'Prometheus'
+        channel: "#<channel-name>"
+        api_url: 'https://hooks.slack.com/services/<webhook-id>'
+  
+  - name: 'telegram'
+    webhooks_config:
+      - send_resolved: true
+        url: 'http://telegram_bot_host_ip:9194'

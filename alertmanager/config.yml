@@ -9,8 +9,3 @@ receivers:
         username: 'Prometheus'
         channel: "#<channel-name>"
         api_url: 'https://hooks.slack.com/services/<webhook-id>'
-  
-  # - name: 'telegram'
-  #   webhooks_config:
-  #     - send_resolved: true
-  #       url: 'http://telegram_bot_host_ip:9194'
