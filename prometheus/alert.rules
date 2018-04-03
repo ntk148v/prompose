@@ -32,29 +32,29 @@ groups:
 
 - name: containers
   rules:
-  - alert: gitlab_down
-    expr: absent(container_memory_usage_bytes{name="gitlab"})
+  - alert: container
+    expr: absent(container_memory_usage_bytes{job="cadvisor"})
     for: 30s
     labels:
       severity: critical
     annotations:
-      summary: "Gitlab down"
-      description: "Gitlab container is down for more than 30 seconds."
+      summary: "Container down"
+      description: "Container $labels.name in $labels.instance is down for more than 30 seconds."
 
-  - alert: gitlab_high_cpu
-    expr: sum(rate(container_cpu_usage_seconds_total{name="gitlab"}[1m])) / count(node_cpu{mode="system"}) * 100 > 10
-    for: 30s
+  - alert: container_high_cpu
+    expr: sum(rate(container_cpu_usage_seconds_total{image!=""}[5m])) by (instance, name) * 100 > 200
+    for: 5m
     labels:
       severity: warning
     annotations:
-      summary: "Gitlab high CPU usage"
-      description: "Gitlab CPU usage is {{ humanize $value }}"
+      summary: "Container high CPU usage"
+      description: "Container $labels.name in $labels.instance CPU usage is {{ humanize $value }}"
 
-  - alert: gitlab_high_memory
-    expr: sum(container_memory_usage_bytes{name="gitlab"}) > 4294967296 # 4GB
-    for: 30s
+  - alert: container_high_memory
+    expr: sum(container_memory_usage_bytes{image!=""}) by (instance, name) > 4e+9 # 4GB
+    for: 5m
     labels:
       severity: warning
     annotations:
-      summary: "Gitlab high memory"
-      description: "Gitlab memory usage is {{ humanize $value }}"
+      summary: "Conainer high memory"
+      description: "Container $labels.name in $labels.instance memory usage is {{ humanize $value }}"
