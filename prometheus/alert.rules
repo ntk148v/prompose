@@ -39,7 +39,7 @@ groups:
       severity: critical
     annotations:
       summary: "Container down"
-      description: "Container $labels.name in $labels.instance is down for more than 30 seconds."
+      description: "Container {{ $labels.name }} in {{ $labels.instance }} is down for more than 30 seconds."
 
   - alert: container_high_cpu
     expr: sum(rate(container_cpu_usage_seconds_total{image!=""}[5m])) by (instance, name) * 100 > 200
@@ -48,7 +48,7 @@ groups:
       severity: warning
     annotations:
       summary: "Container high CPU usage"
-      description: "Container $labels.name in $labels.instance CPU usage is {{ humanize $value }}"
+      description: "Container {{ $labels.name }} in {{ $labels.instance }} CPU usage is {{ humanize $value }}"
 
   - alert: container_high_memory
     expr: sum(container_memory_usage_bytes{image!=""}) by (instance, name) > 4e+9 # 4GB
@@ -57,4 +57,4 @@ groups:
       severity: warning
     annotations:
       summary: "Conainer high memory"
-      description: "Container $labels.name in $labels.instance memory usage is {{ humanize $value }}"
+      description: "Container {{ $labels.name }} in {{ $labels.instance }} memory usage is {{ humanize $value }}"
