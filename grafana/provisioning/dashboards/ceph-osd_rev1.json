@@ -120,7 +120,7 @@
           },
           "targets": [
             {
-              "expr": "ceph_osd_up{osd=\"$osd\"}",
+              "expr": "ceph_osd_up{instance=~\"$node:$port\",job=~\"$job\", osd=\"$osd\"}",
               "interval": "$interval",
               "intervalFactor": 1,
               "refId": "A",
@@ -220,7 +220,7 @@
           },
           "targets": [
             {
-              "expr": "ceph_osd_in{osd=\"$osd\"}",
+              "expr": "ceph_osd_in{instance=~\"$node:$port\",job=~\"$job\", osd=\"$osd\"}",
               "interval": "$interval",
               "intervalFactor": 1,
               "refId": "A",
@@ -310,7 +310,7 @@
           },
           "targets": [
             {
-              "expr": "ceph_osds",
+              "expr": "ceph_osds{instance=~\"$node:$port\",job=~\"$job\"}",
               "interval": "$interval",
               "intervalFactor": 1,
               "refId": "A",
@@ -343,7 +343,7 @@
           "valueName": "current"
         }
       ],
-      "title": "New row"
+      "title": "Status"
     },
     {
       "collapse": false,
@@ -398,7 +398,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "ceph_osd_pgs{osd=~\"$osd\"}",
+              "expr": "ceph_osd_pgs{instance=~\"$node:$port\",job=~\"$job\", osd=~\"$osd\"}",
               "interval": "$interval",
               "intervalFactor": 1,
               "legendFormat": "Number of PGs - {{ osd }}",
@@ -406,7 +406,7 @@
               "step": 60
             },
             {
-              "expr": "avg(ceph_osd_pgs)",
+              "expr": "avg(ceph_osd_pgs{instance=~\"$node:$port\",job=~\"$job\"})",
               "interval": "$interval",
               "intervalFactor": 1,
               "legendFormat": "Average Number of PGs in the Cluster",
@@ -504,7 +504,7 @@
           },
           "targets": [
             {
-              "expr": "ceph_osd_utilization{osd=\"$osd\"}",
+              "expr": "ceph_osd_utilization{instance=~\"$node:$port\",job=~\"$job\", osd=\"$osd\"}",
               "interval": "$interval",
               "intervalFactor": 1,
               "legendFormat": "",
@@ -529,7 +529,7 @@
         }
       ],
       "showTitle": true,
-      "title": "OSD: $osd"
+      "title": "OSD PGs: $osd"
     },
     {
       "collapse": false,
@@ -578,7 +578,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "ceph_osd_perf_apply_latency_seconds{osd=~\"$osd\"}",
+              "expr": "ceph_osd_perf_apply_latency_seconds{instance=~\"$node:$port\",job=~\"$job\", osd=~\"$osd\"}",
               "interval": "$interval",
               "intervalFactor": 1,
               "legendFormat": "Apply Latency (s) - {{ osd }}",
@@ -586,7 +586,7 @@
               "step": 60
             },
             {
-              "expr": "ceph_osd_perf_commit_latency_seconds{osd=~\"$osd\"}",
+              "expr": "ceph_osd_perf_commit_latency_seconds{instance=~\"$node:$port\",job=~\"$job\", osd=~\"$osd\"}",
               "interval": "$interval",
               "intervalFactor": 1,
               "legendFormat": "Commit Latency (s) - {{ osd }}",
@@ -667,7 +667,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "ceph_osd_avail_bytes{osd=~\"$osd\"}",
+              "expr": "ceph_osd_avail_bytes{instance=~\"$node:$port\",job=~\"$job\", osd=~\"$osd\"}",
               "hide": false,
               "interval": "$interval",
               "intervalFactor": 1,
@@ -677,7 +677,7 @@
               "step": 60
             },
             {
-              "expr": "ceph_osd_used_bytes{osd=~\"$osd\"}",
+              "expr": "ceph_osd_used_bytes{instance=~\"$node:$port\",job=~\"$job\", osd=~\"$osd\"}",
               "interval": "$interval",
               "intervalFactor": 1,
               "legendFormat": "Used - {{ osd }}",
@@ -759,7 +759,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "ceph_osd_variance{osd=~\"$osd\"}",
+              "expr": "ceph_osd_variance{instance=~\"$node:$port\",job=~\"$job\", osd=~\"$osd\"}",
               "interval": "$interval",
               "intervalFactor": 1,
               "legendFormat": "Available - {{ osd }}",
@@ -801,7 +801,7 @@
           ]
         }
       ],
-      "title": "New row"
+      "title": "OSD Latency, Storage information: $osd"
     }
   ],
   "time": {
@@ -835,6 +835,82 @@
   },
   "templating": {
     "list": [
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": "Prometheus",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Job",
+        "multi": false,
+        "name": "job",
+        "options": [],
+        "query": "label_values(ceph_health_status, job)",
+        "refresh": 1,
+        "regex": "",
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": "Prometheus",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Host:",
+        "multi": false,
+        "name": "node",
+        "options": [],
+        "query": "label_values(ceph_health_status{job=~\"$job\"}, instance)",
+        "refresh": 1,
+        "regex": "/([^:]+):.*/",
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": "Prometheus",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Port",
+        "multi": false,
+        "name": "port",
+        "options": [],
+        "query": "label_values(ceph_health_status{instance=~\"$node:(.*)\"}, instance)",
+        "refresh": 1,
+        "regex": "/[^:]+:(.*)/",
+        "sort": 3,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": "Prometheus",
+        "hide": 0,
+        "includeAll": false,
+        "label": "OSD",
+        "multi": false,
+        "name": "osd",
+        "options": [],
+        "sort": 1,
+        "query": "label_values(ceph_osd_up, osd)",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
       {
         "auto": true,
         "auto_count": 10,
@@ -910,20 +986,6 @@
         "query": "1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
         "refresh": 0,
         "type": "interval"
-      },
-      {
-        "current": {},
-        "datasource": "Prometheus",
-        "hide": 0,
-        "includeAll": false,
-        "label": "OSD",
-        "multi": false,
-        "name": "osd",
-        "options": [],
-        "query": "label_values(ceph_osd_up, osd)",
-        "refresh": 1,
-        "regex": "",
-        "type": "query"
       }
     ]
   },

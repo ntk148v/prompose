@@ -108,7 +108,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "ceph_pool_available_bytes{pool=~\"$pool\"}",
+              "expr": "ceph_pool_available_bytes{instance=~\"$node:$port\",job=~\"$job\", pool=~\"$pool\"}",
               "interval": "$interval",
               "intervalFactor": 1,
               "legendFormat": "Avilable - {{ pool }}",
@@ -117,7 +117,7 @@
               "step": 60
             },
             {
-              "expr": "ceph_pool_used_bytes{pool=~\"$pool\"}",
+              "expr": "ceph_pool_used_bytes{instance=~\"$node:$port\",job=~\"$job\", pool=~\"$pool\"}",
               "interval": "$interval",
               "intervalFactor": 1,
               "legendFormat": "Used - {{ pool }}",
@@ -126,7 +126,7 @@
               "step": 60
             },
             {
-              "expr": "ceph_pool_used_bytes{pool=~\"$pool\"} + ceph_pool_available_bytes{pool=~\"$pool\"}",
+              "expr": "ceph_pool_used_bytes{instance=~\"$node:$port\",job=~\"$job\", pool=~\"$pool\"} + ceph_pool_available_bytes{instance=~\"$node:$port\",job=~\"$job\", pool=~\"$pool\"}",
               "interval": "$interval",
               "intervalFactor": 1,
               "legendFormat": "Total - {{ pool }}",
@@ -135,7 +135,7 @@
               "step": 60
             },
             {
-              "expr": "ceph_pool_raw_used_bytes{pool=~\"$pool\"}",
+              "expr": "ceph_pool_raw_used_bytes{instance=~\"$node:$port\",job=~\"$job\", pool=~\"$pool\"}",
               "interval": "$interval",
               "intervalFactor": 1,
               "legendFormat": "Raw - {{ pool }}",
@@ -235,7 +235,7 @@
           },
           "targets": [
             {
-              "expr": " ceph_pool_used_bytes{pool=\"$pool\"} / (ceph_pool_available_bytes{pool=\"$pool\"} + ceph_pool_used_bytes{pool=\"$pool\"})",
+              "expr": " ceph_pool_used_bytes{instance=~\"$node:$port\",job=~\"$job\", pool=\"$pool\"} / (ceph_pool_available_bytes{instance=~\"$node:$port\",job=~\"$job\", pool=\"$pool\"} + ceph_pool_used_bytes{instance=~\"$node:$port\",job=~\"$job\", pool=\"$pool\"})",
               "interval": "$interval",
               "intervalFactor": 1,
               "refId": "A",
@@ -303,7 +303,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "ceph_pool_objects_total{pool=~\"$pool\"}",
+              "expr": "ceph_pool_objects_total{instance=~\"$node:$port\",job=~\"$job\", pool=~\"$pool\"}",
               "interval": "$interval",
               "intervalFactor": 1,
               "legendFormat": "Objects - {{ pool }}",
@@ -311,7 +311,7 @@
               "step": 60
             },
             {
-              "expr": "ceph_pool_dirty_objects_total{pool=~\"$pool\"}",
+              "expr": "ceph_pool_dirty_objects_total{instance=~\"$node:$port\",job=~\"$job\", pool=~\"$pool\"}",
               "interval": "$interval",
               "intervalFactor": 1,
               "legendFormat": "Dirty Objects - {{ pool }}",
@@ -393,7 +393,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "irate(ceph_pool_read_total{pool=~\"$pool\"}[3m])",
+              "expr": "irate(ceph_pool_read_total{instance=~\"$node:$port\",job=~\"$job\", pool=~\"$pool\"}[3m])",
               "interval": "$interval",
               "intervalFactor": 1,
               "legendFormat": "Read - {{ pool }}",
@@ -401,7 +401,7 @@
               "step": 60
             },
             {
-              "expr": "irate(ceph_pool_write_total{pool=~\"$pool\"}[3m])",
+              "expr": "irate(ceph_pool_write_total{instance=~\"$node:$port\",job=~\"$job\", pool=~\"$pool\"}[3m])",
               "interval": "$interval",
               "intervalFactor": 1,
               "legendFormat": "Write - {{ pool }}",
@@ -482,7 +482,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "irate(ceph_pool_read_bytes_total{pool=\"$pool\"}[3m])",
+              "expr": "irate(ceph_pool_read_bytes_total{instance=~\"$node:$port\",job=~\"$job\", pool=\"$pool\"}[3m])",
               "interval": "$interval",
               "intervalFactor": 1,
               "legendFormat": "Read Bytes - {{ pool }}",
@@ -490,7 +490,7 @@
               "step": 60
             },
             {
-              "expr": "irate(ceph_pool_write_bytes_total{pool=\"$pool\"}[3m])",
+              "expr": "irate(ceph_pool_write_bytes_total{instance=~\"$node:$port\",job=~\"$job\", pool=\"$pool\"}[3m])",
               "interval": "$interval",
               "intervalFactor": 1,
               "legendFormat": "Written Bytes - {{ pool }}",
@@ -531,7 +531,7 @@
           ]
         }
       ],
-      "title": "New row"
+      "title": "Pools Objects, IOPS & Throughput: $pool"
     }
   ],
   "time": {
@@ -565,6 +565,82 @@
   },
   "templating": {
     "list": [
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": "Prometheus",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Job",
+        "multi": false,
+        "name": "job",
+        "options": [],
+        "query": "label_values(ceph_health_status, job)",
+        "refresh": 1,
+        "regex": "",
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": "Prometheus",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Host:",
+        "multi": false,
+        "name": "node",
+        "options": [],
+        "query": "label_values(ceph_health_status{job=~\"$job\"}, instance)",
+        "refresh": 1,
+        "regex": "/([^:]+):.*/",
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": "Prometheus",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Port",
+        "multi": false,
+        "name": "port",
+        "options": [],
+        "query": "label_values(ceph_health_status{instance=~\"$node:(.*)\"}, instance)",
+        "refresh": 1,
+        "regex": "/[^:]+:(.*)/",
+        "sort": 3,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": "Prometheus",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Pool",
+        "multi": false,
+        "name": "pool",
+        "sort": 1,
+        "options": [],
+        "query": "label_values(ceph_pool_objects_total, pool)",
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      },
       {
         "auto": true,
         "auto_count": 10,
@@ -640,20 +716,6 @@
         "query": "1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
         "refresh": 0,
         "type": "interval"
-      },
-      {
-        "current": {},
-        "datasource": "Prometheus",
-        "hide": 0,
-        "includeAll": false,
-        "label": "Pool",
-        "multi": false,
-        "name": "pool",
-        "options": [],
-        "query": "label_values(ceph_pool_objects_total, pool)",
-        "refresh": 1,
-        "regex": "",
-        "type": "query"
       }
     ]
   },
