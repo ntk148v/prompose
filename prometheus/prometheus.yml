@@ -53,6 +53,21 @@ scrape_configs:
     static_configs:
       - targets: ['host_ip:9100']
 
+  - job_name: 'snmp-exporter'
+    static_configs:
+      - targets:
+        - host_ip # SNMP device
+    metric_path: /snmp
+    params:
+      module: [if_mib,...]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: host_ip:9116 # The SNMP exporter's real hostname:port
+
   # Uncomment it if you use docker-compose.ceph* file.
   # - job_name: 'ceph_exporter'
 

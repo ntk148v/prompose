@@ -92,6 +92,19 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
+  snmp_exporter:
+    image: snmp-exporter:v0.9.0
+    container: snmp_exporter
+    volumes:
+      - prometheus/snmp.yml:/etc/snmp_exporter/snmp.yml # This is an example config, please configure it or simply use snmp-generator tool to generate a new config.
+    ports:
+      - 9116:9116
+    restart: unless-stopped
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
   cadvisor:
     image: google/cadvisor:v0.28.3
     container_name: cadvisor
