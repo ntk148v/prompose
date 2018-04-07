@@ -94,7 +94,7 @@ services:
 
   snmp_exporter:
     image: snmp-exporter:v0.9.0
-    container: snmp_exporter
+    container_name: snmp_exporter
     volumes:
       - prometheus/snmp.yml:/etc/snmp_exporter/snmp.yml # This is an example config, please configure it or simply use snmp-generator tool to generate a new config.
     ports:
