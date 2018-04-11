@@ -2587,7 +2587,7 @@
   ],
   "schemaVersion": 14,
   "style": "dark",
-  "tags": [],
+  "tags": ["prometheus"],
   "templating": {
     "list": [
       {
