@@ -110,7 +110,7 @@
           },
           "targets": [
             {
-              "expr": "(sum(node_memory_MemTotal) - sum(node_memory_MemFree+node_memory_Buffers+node_memory_Cached) ) / sum(node_memory_MemTotal) * 100",
+              "expr": "(sum(node_memory_MemTotal{instance=~\"$node:9100\"}) - sum(node_memory_MemFree{instance=~\"$node:9100\"}+node_memory_Buffers{instance=~\"$node:9100\"}+node_memory_Cached{instance=~\"$node:9100\"}) ) / sum(node_memory_MemTotal{instance=~\"$node:9100\"}) * 100",
               "interval": "10s",
               "intervalFactor": 1,
               "refId": "A",
@@ -189,7 +189,7 @@
           },
           "targets": [
             {
-              "expr": "sum(sum by (container_name)( rate(container_cpu_usage_seconds_total{image!=\"\"}[1m] ) )) / count(node_cpu{mode=\"system\"}) * 100",
+              "expr": "sum(sum by (container_name)( rate(container_cpu_usage_seconds_total{instance=~\"$node:8080\", image!=\"\"}[1m] ) )) / count(node_cpu{instance=~\"$node:9100\", mode=\"system\"}) * 100",
               "interval": "10s",
               "intervalFactor": 1,
               "refId": "A",
@@ -268,7 +268,7 @@
           },
           "targets": [
             {
-              "expr": "sum (container_fs_limit_bytes - container_fs_usage_bytes) / sum(container_fs_limit_bytes)",
+              "expr": "sum (container_fs_limit_bytes{instance=~\"$node:8080\"} - container_fs_usage_bytes{instance=~\"$node:8080\"}) / sum(container_fs_limit_bytes{instance=~\"$node:8080\"})",
               "interval": "10s",
               "intervalFactor": 1,
               "metric": "",
@@ -340,7 +340,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sort_desc(sum(rate(container_cpu_user_seconds_total{image!=\"\"}[1m])) by (name))",
+              "expr": "sort_desc(sum(rate(container_cpu_user_seconds_total{instance=\"$node:8080\", image!=\"\"}[1m])) by (name))",
               "interval": "10s",
               "intervalFactor": 1,
               "legendFormat": "{{ name }}",
@@ -433,7 +433,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sort_desc(sum(container_memory_usage_bytes{image!=\"\"}) by (name))",
+              "expr": "sort_desc(sum(container_memory_usage_bytes{instance=\"$node:8080\", image!=\"\"}) by (name))",
               "interval": "10s",
               "intervalFactor": 1,
               "legendFormat": "{{ name }}",
@@ -518,7 +518,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sort_desc(sum by (name) (rate(container_network_receive_bytes_total{image!=\"\"}[1m] ) ))",
+              "expr": "sort_desc(sum by (name) (rate(container_network_receive_bytes_total{instance=\"$node:8080\", image!=\"\"}[1m] ) ))",
               "interval": "10s",
               "intervalFactor": 1,
               "legendFormat": "{{ name }}",
@@ -603,7 +603,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sort_desc(sum by (name) (rate(container_network_transmit_bytes_total{image!=\"\"}[1m] ) ))",
+              "expr": "sort_desc(sum by (name) (rate(container_network_transmit_bytes_total{instance=\"$node:8080\", image!=\"\"}[1m] ) ))",
               "intervalFactor": 2,
               "legendFormat": "{{ name }}",
               "metric": "container_network_transmit_bytes_total",
@@ -677,7 +677,28 @@
     ]
   },
   "templating": {
-    "list": []
+    "list": [
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": "Prometheus",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Host:",
+        "multi": false,
+        "name": "node",
+        "options": [],
+        "query": "label_values(node_boot_time{job=~\"node-exporter\"}, instance)",
+        "refresh": 1,
+        "regex": "/([^:]+):.*/",
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
   },
   "annotations": {
     "list": []
