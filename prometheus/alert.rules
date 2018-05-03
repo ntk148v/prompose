@@ -42,8 +42,8 @@ groups:
       description: "Container {{ $labels.name }} in {{ $labels.instance }} is down for more than 30 seconds."
 
   - alert: container_high_cpu
-    expr: sum(rate(container_cpu_usage_seconds_total{image!=""}[5m])) by (instance, name) * 100 > 200
-    for: 5m
+    expr: sum(rate(container_cpu_usage_seconds_total{image!=""}[1m])) by (instance, name) * 100 > 200
+    for: 1m
     labels:
       severity: warning
     annotations:
@@ -52,7 +52,7 @@ groups:
 
   - alert: container_high_memory
     expr: sum(container_memory_usage_bytes{image!=""}) by (instance, name) > 4e+9 # 4GB
-    for: 5m
+    for: 1m
     labels:
       severity: warning
     annotations:
