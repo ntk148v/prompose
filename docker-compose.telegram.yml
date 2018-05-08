@@ -54,11 +54,11 @@ services:
       - monitor-net
     ports:
       - 9194:8080
-  
+
   alertmanager:
     image: prom/alertmanager:v0.14.0
     container_name: alertmanager
-    volumes: 
+    volumes:
       - ./alertmanager/:/etc/alertmanager/
     command:
       - '--config.file=/etc/alertmanager/config.yml'
@@ -66,6 +66,21 @@ services:
     restart: unless-stopped
     ports:
       - 9093:9093
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
+  alertmanager_dashboard:
+    image: cloudflare/unsee:v0.9.2
+    depends_on:
+      - alertmanager
+    restart: on-failure
+    environment:
+      ALERTMANAGER_URI: http://<alert_manager_uri>:9093
+      PORT: 55000
+    ports:
+      - 55000:55000
     networks:
       - monitor-net
     labels:

@@ -35,11 +35,11 @@ services:
         - monitor-net
       labels:
         org.label-schema.group: "monitoring"
-  
+
   alertmanager:
     image: ${PRIVATE_REGISTRY}/${NAMESPACE}/alertmanager:v0.14.0
     container_name: alertmanager
-    volumes: 
+    volumes:
       - ./alertmanager/:/etc/alertmanager/
     command:
       - '--config.file=/etc/alertmanager/config.yml'
@@ -70,6 +70,21 @@ services:
       - monitor-net
     ports:
       - 9194:8080
+
+  alertmanager_dashboard:
+    image: ${PRIVATE_REGISTRY}/${NAMESPACE}/unsee:v0.9.2
+    depends_on:
+      - alertmanager
+    restart: on-failure
+    environment:
+      ALERTMANAGER_URI: http://<alert_manager_uri>:9093
+      PORT: 55000
+    ports:
+      - 55000:55000
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
 
   node_exporter:
     image: ${PRIVATE_REGISTRY}/${NAMESPACE}/node-exporter:v0.15.2
