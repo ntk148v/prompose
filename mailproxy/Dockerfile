@@ -8,10 +8,9 @@ ENV http_proxy "http://10.61.2.237:3128"
 ENV https_proxy "http://10.61.2.237:3128"
 
 COPY mailproxy.py /
-COPY config.ini /etc/
 
 RUN pip install -U aiosmtpd
 
 EXPOSE 9011
 
-CMD [ "python3", "./mailproxy.py", "/etc/config.ini" ]
+CMD [ "python3", "./mailproxy.py", "/etc/mailproxy/config.ini" ]
