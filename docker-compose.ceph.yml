@@ -22,6 +22,7 @@ services:
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--storage.tsdb.retention=90d'
       - '--web.enable-lifecycle'
+      - '--web.external-url=http://<prometheus_host>:9090'
     restart: unless-stopped
     ports:
       - 9090:9090
@@ -43,6 +44,7 @@ services:
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
+      - '--web.external-url=http://<alertmanager_host>:9093'
     restart: unless-stopped
     ports:
       - 9093:9093
