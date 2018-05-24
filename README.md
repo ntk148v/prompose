@@ -53,5 +53,6 @@ $ mount -o remount,rw '/sys/fs/cgroup' && ln -s /sys/fs/cgroup/cpu,cpuacct /sys/
 ## TODO
 
 Production security:
+* Update new version with Ansible to manage configuration. The idea: users define themselves which services (exporters) they want to enable (for example, `enable_prometheus: true`) then with a conditional in template files, `prompose` automatically generates docker-compose file and run it.
 * Enable SSL for Grafana with a Proxy [jwilder/nginx-proxy](https://hub.docker.com/r/jwilder/nginx-proxy/) or [containious/traelik](https://github.com/containous/traefik)?
 * Add user authentication via a  Reverse proxy [jwilder/nginx-proxy](https://hub.docker.com/r/jwilder/nginx-proxy/) or [containious/traelik](https://github.com/containous/traefik) for services cAdvisor, Prometheus & AlertManager.
