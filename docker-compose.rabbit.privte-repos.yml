@@ -1,0 +1,157 @@
+version: '3'
+
+networks:
+  monitor-net:
+    driver: bridge
+
+volumes:
+    prometheus_data: {}
+    grafana_data: {}
+
+services:
+  prometheus:
+      image: ${PRIVATE_REGISTRY}/${NAMESPACE}/prometheus:v2.2.1
+      container_name: prometheus
+      volumes:
+        - ./prometheus/:/etc/prometheus/
+        - prometheus_data:/prometheus
+      command:
+        - '--config.file=/etc/prometheus/prometheus.yml'
+        - '--storage.tsdb.path=/prometheus'
+        - '--web.console.libraries=/etc/prometheus/console_libraries'
+        - '--web.console.templates=/etc/prometheus/consoles'
+        - '--storage.tsdb.retention=90d'
+        - '--web.enable-lifecycle'
+        - '--web.external-url=http://<prometheus_host>:9090'
+      restart: unless-stopped
+      ports:
+        - 9090:9090
+      links:
+        - cadvisor:cadvisor
+        - alertmanager:alertmanager
+      depends_on:
+        - cadvisor
+      networks:
+        - monitor-net
+      labels:
+        org.label-schema.group: "monitoring"
+
+  alertmanager:
+    image: ${PRIVATE_REGISTRY}/${NAMESPACE}/alertmanager:v0.14.0
+    container_name: alertmanager
+    volumes:
+      - ./alertmanager/:/etc/alertmanager/
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+      - '--web.external-url=http://<alertmanager_host>:9093'
+    restart: unless-stopped
+    ports:
+      - 9093:9093
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
+  alertmanager_dashboard:
+    image: ${PRIVATE_REGISTRY}/${NAMESPACE}/unsee:v0.9.2
+    depends_on:
+      - alertmanager
+    restart: on-failure
+    environment:
+      ALERTMANAGER_URI: http://alert_manager_uri:9093
+      PORT: 55000
+    ports:
+      - 55000:55000
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
+  node_exporter:
+    image: ${PRIVATE_REGISTRY}/${NAMESPACE}/node-exporter:v0.15.2
+    container_name: node_exporter
+    user: root
+    privileged: true
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)'
+    restart: unless-stopped
+    ports:
+      - 9100:9100
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
+  snmp_exporter:
+    image: ${PRIVATE_REGISTRY}/${NAMESPACE}/snmp-exporter:v0.9.0
+    container_name: snmp_exporter
+    volumes:
+      - ./prometheus/snmp.yml:/etc/snmp_exporter/snmp.yml # This is an example config, please configure it or simply use snmp-generator tool to generate a new config.
+    ports:
+      - 9116:9116
+    restart: unless-stopped
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
+  rabbit_exporter:
+    image: ${PRIVATE_REGISTRY}/${NAMESPACE}/rabbitmq-exporter:v0.28.0
+    container_name: rabbit_exporter
+    ports:
+      - "5557:5557"
+    environment:
+        RABBIT_URL: "http://{$RABBIT_HOST:-localhost}:15672"
+      RABBIT_USER: "admin"
+      RABBIT_PASSWORD: "rabbitmqpassword"
+      PUBLISH_PORT: "5557"
+      OUTPUT_FORMAT: "json"
+      LOG_LEVEL: "debug"
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
+
+  cadvisor:
+    image: ${PRIVATE_REGISTRY}/${NAMESPACE}/cadvisor:v0.28.3
+    container_name: cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /cgroup:/cgroup:ro # doesn't work on MacOS only for Linux
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
+  grafana:
+    image: ${PRIVATE_REGISTRY}/${NAMESPACE}/grafana:5.0.3
+    container_name: grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    environment:
+      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
