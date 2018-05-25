@@ -16,6 +16,7 @@ Inspired by [stefanprodan/dockprom](https://github.com/stefanprodan/dockprom) & 
 * If you would like to change which targets should be monitored or make configuration changes, update `prometheus/prometheus.yml`.
 * If you want to change alert rules, check `prometheus/alert.rules`.
 * Update `alertmanager/config.yml`.
+* Update `prometheus/alert.rules`, define your own rules.
 * Run it!
 
 ```
