@@ -1,0 +1,27 @@
+[prometheus]
+# These hostname must be resolvable from your deployment host
+prom-01
+
+[alertmanager]
+# By default, start alertmanager service in the same host with prometheus
+prom-01
+
+[telegram-bot:children]
+alertmanager
+
+[node-exporter]
+node-host-01
+node-host-02
+node-host-03
+
+[rabbit-exporter]
+rabbit-host-01
+rabbit-host-02
+
+[ceph-exporter]
+ceph-host-01
+ceph-host-02
+
+[snmp-exporter]
+snmp-host-01
+snmp-host-02
