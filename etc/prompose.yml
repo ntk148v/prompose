@@ -1,0 +1,23 @@
+---
+# You can use this file to override __any__ variable through Prompose
+# Additional options can be found in the 'prompose/ansible/group_vars/all.yml' file
+
+################
+# Docker options
+################
+
+# install_docker: "yes"
+# install_docker_compose: "yes"
+# docker_registry: "10.6.9.9:4000"
+# docker_namespace: "clouldlab"
+# docker_registry_username: "cloud"
+# docker_registry_password: "verysecurepassword"
+
+##################
+# Prompose options
+##################
+
+enable_node_exporter: "yes"
+enable_ceph_exporter: "no"
+enable_rabbit_exporter: "no"
+enable_snmp_exporter: "no"
