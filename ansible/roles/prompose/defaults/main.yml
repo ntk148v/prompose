@@ -1,0 +1,20 @@
+---
+prometheus_image: "{{ docker_registry ~ '/' ~ docker_namespace if docker_registry and docker_namespace else 'prom' }}/prometheus:{{ prometheus_img_ver }}"
+
+grafana_image: "{{ docker_registry ~ '/' ~ docker_namespace if docker_registry and docker_namespace else 'grafana' }}/grafana:{{ grafana_img_ver }}"
+
+alertmanager_image: "{{ docker_registry  ~ '/' ~ docker_namespace if docker_registry and docker_namespace else 'prom' }}/alertmanager:{{ alertmanager_img_ver }}"
+
+unsee_image: "{{ docker_registry  ~ '/' ~ docker_namespace if docker_registry and docker_namespace else 'cloudflare' }}/unsee:{{ unsee_img_ver }}"
+
+cadvisor_image: "{{ docker_registry  ~ '/' ~ docker_namespace if docker_registry and docker_namespace else 'google' }}/cadvisor:{{ cadvisor_img_ver }}"
+
+node_exporter_image: "{{ docker_registry ~ '/' ~ docker_namespace if docker_registry and docker_namespace else 'prom' }}/node-exporter:{{ node_exporter_img_ver }}"
+
+ceph_exporter_image: "{{ docker_registry ~ '/' ~ docker_namespace if docker_registry and docker_namespace else 'digitalocean' }}/cephceph_exporter:{{ ceph_exporter_img_ver }}"
+
+snmp_exporter_image: "{{ docker_registry ~ '/'  ~ docker_namesapce if docker_registry and docker_namespace else 'prom' }}/snmp-exporter:{{ snmp_exporter_img_ver }}"
+
+rabbit_exporter_image: "{{ docker_registry ~ '/' ~ docker_namespace if docker_registry and docker_namespace else 'kbudde' }}/rabbitmq-exporter:{{ rabbit_exporter_img_ver }} "
+
+telegram_bot_image: "{{ docker_registry ~ '/' ~ docker_namespace if docker_registry and docker_namespace else 'metalmatze' }}/alertmanager-bot:{{ telegram_bot_img_ver }}"
