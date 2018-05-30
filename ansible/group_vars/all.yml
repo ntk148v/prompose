@@ -108,9 +108,18 @@ rabbit_output_format: "json"
 grafana_user: "admin"
 grafana_password: "password"
 
-######################
-# Telegram bot options
-######################
+###############
+# Alert options
+###############
 
-telegram_admin: "telegram_user_id"
-telegram_token: "telegram_token"
+alert_via_email: "{{ alert_via_email }}"
+alert_mail_account: "{{ alert_mail_account }}"
+alert_mail_host: "{{ alert_mail_host }}"
+alert_mail_port: "{{ alert_mail_port }}"
+alert_mail_password: "{{ alert_mail_password }}"
+alert_via_slack: "{{ alert_via_slack }}"
+alert_slack_channel: "{{ alert_slack_channel }}"
+alert_slack_webhook_id: "{{ alert_slack_webhook_id }}"
+alert_via_telegram: "{{ enable_telegram_bot }}"
+telegram_admin: "{{ telegram_admin }}"
+telegram_token: "{{ telegram_token }}"

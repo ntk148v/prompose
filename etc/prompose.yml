@@ -31,3 +31,19 @@ enable_alertmanager: "yes"
 ################################################################
 
 prompose_path: "/usr/local/share/prompose"
+
+###############
+# Alert options
+###############
+
+alert_via_email: "yes"
+alert_mail_account: "test@example.com"
+alert_mail_host: "smtp.host.example"
+alert_mail_port: "465"
+alert_mail_password: "mail_password"
+alert_via_slack: "yes"
+alert_slack_channel: "#alert-channel"
+alert_slack_webhook_id: "webhook-id"
+alert_via_telegram: "{{ enable_telegram_bot }}"
+telegram_admin: "telegram_user_id"
+telegram_token: "telegram_token"
