@@ -1,0 +1,22 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: kiennt26
+  description: Install Docker for Linux
+  license: "license (Apache 2)"
+  min_ansible_version:  2.4
+
+  platforms:
+    - name: Ubuntu
+      versions:
+      - trusty
+      - xenial
+      - bionic
+    - name: CentOS/RedHat
+      versions:
+      - 6
+      - 7
+    - name: Debian
+      versions:
+      - "jessie"

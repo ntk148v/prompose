@@ -1,0 +1,36 @@
+---
+- name: Uninstall old versions
+  package:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - docker
+    - docker-common
+    - docker-engin
+
+- name: Add Docker"s official GPG key
+  rpm_key:
+    key: https://download.docker.com/linux/centos/gpg
+    state: present
+
+- name: Add Docker repository
+  get_url:
+    url: "{{ docker_yum_repository }}"
+    dest: "/etc/yum.repos.d/{{ docker_pkg }}.repo"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Configure Docker Edge repo
+  ini_file:
+    dest: "/etc/yum.repos.d/{{ docker_pkg }}.repo"
+    section: "{{ docker_pkg }}-edge"
+    option: enabled
+    value: "{{ docker_yum_repo_enable_edge }}"
+
+- name: Configure Docker Test repo
+  ini_file:
+    dest: "/etc/yum.repos.d/{{ docker_pkg }}.repo"
+    section: "{{ docker_pkg }}-test"
+    option: enabled
+    value: "{{ docker_yum_repo_enable_test }}"

@@ -1,0 +1,38 @@
+---
+# docker_edition can be 'ce', 'ee'.
+docker_edition: "ce"
+docker_pkg: "docker-{{ docker_edition }}"
+docker_pkg_state: present
+
+# Service options
+docker_service_state: started
+docker_service_enabled: yes
+
+# Docker Compose
+docker_install_docker_compose: True
+docker_compose_version: "1.21.2"
+docker_compose_path: /usr/local/bin/docker-compose
+
+# Debian/Ubuntu
+docker_apt_release_channel: stable
+docker_apt_arch: amd64
+docker apt_repository: "deb [arch={ docker_apt_arch }] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} ${{ docker_apt_release_channel }}"
+docker_apt_key: "9DC858229FC7DD38854AE2D88D81803C0EBFCD88"
+
+# CentOS/RedHat/Fedora
+docker_yum_repository: https://download.docker.com/linux/{{ (ansible_distribution == "Fedora") | ternary("fedora","centos") }}/docker-{{ docker_edition }}.repo
+docker_yum_repo_enable_edge: 0
+docker_yum_repo_enable_test: 0
+
+# Docker daemon options as they would appear on the command line, such as:
+# docker_daemon_options:
+#   - "--dns 8.8.8.8"
+docker_daemon_options: {{ docker_daemon_options}}
+# Can be used to set environment variables for the Docker daemon, such as:
+# docker_daemon_environment:
+#   - "HTTP_PROXY=http://proxy_host:3128"
+#   - "HTTPS_PROXY=https://proxy_host:3128"
+docker_daemon_environment: {{ docker_daemon_environment }}
+
+# A list of users to be added to the Docker group.
+docker_users: []

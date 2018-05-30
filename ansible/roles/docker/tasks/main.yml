@@ -1,0 +1,63 @@
+---
+- include_tasks: setup-redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include_tasks: setup-debian.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Install Docker
+  package:
+    name: "{{ docker_pkg }}"
+    state: "{{ docker_pkg_state }}"
+
+- name: Remove Upstart config file
+  file:
+    path: "/etc/default/docker"
+    state: absent
+
+- name: Ensure systemd directory exists
+  file:
+    path: "/etc/systemd/system"
+    state: directory
+    owner: root
+    owner: root
+    mode: 0755
+
+- name: Generate systemd unit file
+  template:
+    src: "docker.service.j2"
+    dest: "/etc/systemd/system/docker.service"
+    owner: root
+    group: root
+    mode: 0644
+  register: docker_register_systemd_service
+
+- name: Reload systemd daemon
+  command: "systemctl daemon-reload"
+  notify: Restart docker
+  when: (docker_register_systemd_service and
+         docker_register_systemd_service | changed)
+
+- name: Ensure Docker is stared and enabled at boot
+  service:
+    name: docker
+    state: "{{ docker_service_state }}"
+    enabled: "{{ docker_service_enabled }}"
+
+- name: Add specfic users to "docker" group
+  user:
+    name: "{{ item }}"
+    groups: "docker"
+    append: True
+  with_items: "{{ docker_users }}"
+  when: docker_users
+
+- name: Install Docker compose
+  get_ur:
+    url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-Linux-x86_64"
+    dest: "{{ docker_compose_path }}"
+    force: True
+    owner: root
+    group: root
+    mode: 0755
+  when: docker_install_docker_compose
