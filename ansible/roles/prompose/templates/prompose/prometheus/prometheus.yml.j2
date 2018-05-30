@@ -1,0 +1,100 @@
+# my global config
+global:
+  scrape_interval:     15s # By default, scrape targets every 15 seconds.
+  evaluation_interval: 15s # By default, scrape targets every 15 seconds.
+  # scrape_timeout is set to the global default (10s).
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+      monitor: 'monitoring'
+
+# Load and evaluate rules in this file every 'evaluation_interval' seconds.
+rule_files:
+  - 'alert.rules'
+  # - "first.rules"
+  # - "second.rules"
+
+# alert
+{% if inventory_hostname in groups['alertmanager'] and enable_alertmanager | bool %}
+alerting:
+  alertmanagers:
+  - scheme: http
+    static_configs:
+      - targets:
+      {% for host in groups['alertmanager'] %}
+        - "{{ host }}:{{ alertmanager_port }}"
+      {% endfor %}
+{% endif %}
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+
+  - job_name: 'prometheus'
+
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+
+    static_configs:
+      - targets: {% set targets=[] %}{% for host in groups['prometheus'] %}{{ target.append(host:prometheus_port) }}{% endfor %}["{{ targets | join(',') }}"]
+
+{% if inventory_hostname in groups['cadvisor'] and enable_cadvisor | bool %}
+  - job_name: 'cadvisor'
+
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+
+    static_configs:
+      - targets: {% set targets=[] %}{% for host in groups['cadvisor'] %}{{ target.append(host:cadvisor_port) }}{% endfor %}["{{ targets | join(',') }}"]
+{% endif %}
+
+{% if inventory_hostname in groups['node-exporter'] and enable_node_exporter | bool %}
+  - job_name: 'node-exporter'
+
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+
+    static_configs:
+      - targets: {% set targets=[] %}{% for host in groups['node-exporter'] %}{{ target.append(host:node_exporter_port) }}{% endfor %}["{{ targets | join(',') }}"]
+{% endif %}
+
+# NOTE(kiennt): I couldn't make it work correctly. Comment these lines until I find a way to deal with it.
+# {% if inventory_hostname in groups['snmp-exporter'] and enable_snmp_exporter | bool %}
+#   - job_name: 'snmp-exporter'
+#     static_configs:
+#       - targets:
+#       {% for host in groups['snmp-exporter'] %}
+#         - "{{ host }}:{{ snmp_exporter_port }}"
+#       {% endfor %}
+#     metric_path: /snmp
+#     params:
+#       module: [if_mib,...]
+#     relabel_configs:
+#       - source_labels: [__address__]
+#         target_label: __param_target
+#       - source_labels: [__param_target]
+#         target_label: instance
+#       - target_label: __address__
+#         replacement: host_ip:9116 # The SNMP exporter's real hostname:port
+# {% endif %}
+
+{% if inventory_hostname in groups['ceph-exporter'] and enable_ceph_exporter | bool %}
+  - job_name: 'ceph_exporter'
+
+    # Override the global default and scrape targets from this job evert 5 seconds
+    scrape_interval: 5s
+
+    static_configs:
+      - targets: {% set targets=[] %}{% for host in groups['ceph-exporter'] %}{{ target.append(host:ceph_exporter_port) }}{% endfor %}["{{ targets | join(',') }}"]
+{% endif %}
+
+{% if inventory_hostname in groups['rabbit-exporter'] and enable_rabbit_exporter | bool %}
+  - job_name: 'rabbitmq_exporter'
+
+    # Override the global default and scrape targets from this job every 5 seconds
+    scrape_interval: 5s
+    static_configs:
+      - targets: {% set targets=[] %}{% for host in groups['rabbit-exporter'] %}{{ target.append(host:rabbit_exporter_port) }}{% endfor %}["{{ targets|join(',') }}"]
+{% endif %}
