@@ -86,8 +86,8 @@ services:
       LISTEN_ADDR: 0.0.0.0:8080
       BOLT_PATH: /data/bot.db
       STORE: bolt
-      TELEGRAM_ADMIN: {{ telegram_admin }}
-      TELEGRAM_TOKEN: {{ telegram_token }}
+      TELEGRAM_ADMIN: {{ alert_telegram_admin }}
+      TELEGRAM_TOKEN: {{ alert_telegram_token }}
     volumes:
       - telegram_bot_data:/data
     networks:
