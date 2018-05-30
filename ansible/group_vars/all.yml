@@ -7,10 +7,23 @@
 
 install_docker: "{{ install_docker }}"
 install_docker_compose: "{{ install_docker_compose }}"
-docker_registry: "{{ docker_registry }}"
-docker_namespace: "{{ docker_namespace }}"
+docker_registry:
+docker_namespace:
 docker_registry_username: "{{ docker_registry_username }}"
 docker_registry_password: "{{ docker_registry_password }}"
+docker_dns_servers:
+# Can be used to set environment variables for the Docker daemon, such as:
+# docker_daemon_environment:
+#   - "HTTP_PROXY=http://proxy.example.com:3128/"
+#   - "HTTPS_PROXY=http://proxy.example.com:3128/"
+#   - "NO_PROXY=localhost,127.0.0.1"
+docker_daemon_environments: []
+# Docker daemon options as they would appear on the command line, such as:
+# docker_daemon_options:
+#   - "--dns 8.8.8.8"
+docker_daemon_options:
+  - "{{ '--insecure-registry' docker_registry }} if docker_registry else '' }}"
+  - "{{ '--dns' docker_dns_servers if docker_dns_servers else '' }}"
 
 ##################
 # Prompose options
@@ -21,6 +34,9 @@ enable_ceph_exporter: "{{ enable_ceph_exporter}}"
 enable_rabbit_exporter: "{{ enable_rabbit_exporter }}"
 enable_snmp_exporter: "{{ enable_snmp_exporter }}"
 enable_cadvisor: "{{ enable_cadvisor }}"
+enable_grafana: "{{ enable_grafana }}"
+# Unsee is alert dashboard
+enable_unsee: "{{ enable_unsee }}"
 
 ##################
 # Port mappings
@@ -35,4 +51,4 @@ alertmanager_unsee_dashboard_port: "55550"
 cadvisor_port: "8080"
 ceph_exporter_port: "9128"
 snmp_exporter_port: "9116"
-
+grafana_port: "5555"
