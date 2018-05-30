@@ -37,6 +37,7 @@ enable_cadvisor: "{{ enable_cadvisor }}"
 enable_grafana: "{{ enable_grafana }}"
 # Unsee is alert dashboard
 enable_unsee: "{{ enable_unsee }}"
+enable_alertmanager: "{{ enable_alertmanager }}"
 
 ##################
 # Port mappings
@@ -47,8 +48,67 @@ alertmanager_port: "9093"
 node_exporter_port: "9100"
 rabbit_exporter_port: "5557"
 telegram_bot_port: "9194"
-alertmanager_unsee_dashboard_port: "55550"
+unsee_dashboard_port: "55550"
 cadvisor_port: "8080"
 ceph_exporter_port: "9128"
 snmp_exporter_port: "9116"
 grafana_port: "5555"
+
+###############
+# Image version
+###############
+
+prometheus_img_ver: "v2.2.1"
+alertmanager_img_ver: "v0.14.0"
+node_exporter_img_ver: "v0.15.2"
+unsee_img_ver: "v0.9.2"
+ceph_exporter_img_ver: "1.1.0"
+rabbit_exporter_img_ver: ":v0.28.0"
+cadvisor_img_ver: "v0.28.3"
+snmp_exporter_img_ver: "v0.9.0"
+grafana_img_ver: "5.0.3"
+telegram_bot_img_ver: "0.2"
+
+################
+# Container name
+################
+
+prometheus_container_name: "prometheus"
+grafana_container_name: "grafana"
+alertmanager_container_name: "alertmanager"
+unsee_container_name: "unsee"
+node_exporter_container_name: "node-exporter"
+cadvisor_container_name: "cadvisor"
+ceph_exporter_container_name: "ceph-exporter"
+snmp_exporter_container_name: "snmp-exporter"
+telegram_bot_container_name: "telegram-bot"
+
+####################
+# Prometheus options
+####################
+
+prometheus_storage_retention: "90d"
+
+##########################
+# Rabbit container options
+##########################
+
+rabbit_url: "http://localhost:15672"
+rabbit_user: "admin"
+rabbit_password: "rabbitpassword"
+rabbit_log_level: "debug"
+rabbit_output_format: "json"
+
+#################
+# Grafana options
+#################
+
+grafana_user: "admin"
+grafana_password: "password"
+
+######################
+# Telegram bot options
+######################
+
+telegram_admin: "telegram_user_id"
+telegram_token: "telegram_token"

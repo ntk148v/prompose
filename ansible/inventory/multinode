@@ -1,13 +1,23 @@
 [prometheus]
 # These hostname must be resolvable from your deployment host
-prom-01
+prom-host-01
 
 [alertmanager]
 # By default, start alertmanager service in the same host with prometheus
-prom-01
+prom-host-01
+
+[grafana]
+grafana-host-01
+
+[unsee:children]
+alertmanager
 
 [telegram-bot:children]
 alertmanager
+
+[cadvisor]
+cadvisor-host-01
+cadvisor-host-02
 
 [node-exporter]
 node-host-01
