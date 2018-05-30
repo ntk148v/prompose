@@ -1,6 +1,8 @@
 ---
 # The options in this file can be overridden in 'prompose.yml'
 
+prompose_path: "{{ prompose_path }}"
+
 ################
 # Docker options
 ################
