@@ -1,12 +1,12 @@
 ---
-- name: Creating prompose directory
+- name: Create prompose directory
   file:
     path: "{{ prompose_path }}"
     state: "directory"
     mode: 0755
   become: true
 
-- name: Copying docker-compose
+- name: Copy docker-compose
   template:
     src: "prompose/docker-compose.yml.j2"
     dest: "{{ prompose_path }}/docker-compose.yml"
@@ -22,7 +22,7 @@
     - inventory_hostname in groups['grafana']
     - enable_grafana | bool
 
-- name: Copying grafana datasources
+- name: Copy grafana datasources
   template:
     src: "prompose/grafana/provisioning/datasources/datasource.yml.j2"
     dest: "{{ prompose_path }}/grafana/provisioning/datasources/datasource.yml.j2"
@@ -31,7 +31,7 @@
     - inventory_hostname in groups['grafana']
     - enable_grafana | bool
 
-- name: Copying grafana dashboards
+- name: Copy grafana dashboards
   template:
     src: "prompose/grafana/provisioning/dashboards"
     dest: "{{ prompose_path }}/grafana/provisioning/dashboards"
@@ -49,17 +49,17 @@
   when:
     - inventory_hostname in groups['prometheus']
 
-- name: Copying prometheus.yml config
+- name: Copy prometheus.yml config
   template:
-    src: "prometheus/prometheus.yml.j2"
+    src: "prompose/prometheus/prometheus.yml.j2"
     dest: "{{ prompose_path }}/prometheus/prometheus.yml"
     mode: 0644
   when:
     - inventory_hostname in groups['prometheus']
 
-- name: Copying alert.rules
+- name: Copy alert.rules
   template:
-    src: "prometheus/alert.rules"
+    src: "prompose/prometheus/alert.rules"
     dest: "{{ prompose_path }}/prometheus/alert.rules"
     mode: 0644
   when:
@@ -72,3 +72,20 @@
   become: true
   when:
     - inventory_hostname in groups['alertmanager']
+
+- name: Copy alert config
+  template:
+    src: "prompose/alertmanager/config.yml.j2"
+    dest: "{{ prompose_path }}/alertmanager/config.yml"
+    mode: 0644
+  when:
+    - inventory_hostname in groups['alertmanager']
+
+- name: Stop and remove any existed docker containers via docker-compose
+  docker_service:
+    project: "{{ prompose_path }}"
+    state: absent
+
+- name: Run docker-compose
+    project: "{{ prompose_path }}"
+    state: present
