@@ -1,0 +1,38 @@
+---
+# The options in this file can be overridden in 'prompose.yml'
+
+################
+# Docker options
+################
+
+install_docker: "{{ install_docker }}"
+install_docker_compose: "{{ install_docker_compose }}"
+docker_registry: "{{ docker_registry }}"
+docker_namespace: "{{ docker_namespace }}"
+docker_registry_username: "{{ docker_registry_username }}"
+docker_registry_password: "{{ docker_registry_password }}"
+
+##################
+# Prompose options
+##################
+
+enable_node_exporter: "{{ enable_node_exporter }}"
+enable_ceph_exporter: "{{ enable_ceph_exporter}}"
+enable_rabbit_exporter: "{{ enable_rabbit_exporter }}"
+enable_snmp_exporter: "{{ enable_snmp_exporter }}"
+enable_cadvisor: "{{ enable_cadvisor }}"
+
+##################
+# Port mappings
+#################
+
+prometheus_port: "9090"
+alertmanager_port: "9093"
+node_exporter_port: "9100"
+rabbit_exporter_port: "5557"
+telegram_bot_port: "9194"
+alertmanager_unsee_dashboard_port: "55550"
+cadvisor_port: "8080"
+ceph_exporter_port: "9128"
+snmp_exporter_port: "9116"
+
