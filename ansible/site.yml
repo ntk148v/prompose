@@ -1,0 +1,13 @@
+---
+- name: Install Docker and docker-compose
+  hosts: all
+  remote_user: root
+  roles:
+    - role: docker
+      when: install_docker | bool and install_docker_compose | bool
+
+- name: Apply role Prompose
+  hosts: all
+  remote_user: root
+  roles:
+    - role: prompose
