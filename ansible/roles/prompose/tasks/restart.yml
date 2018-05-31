@@ -1,0 +1,7 @@
+---
+
+- name: Restart all prompose containers
+  docker_service:
+    project_src: "{{ prompose_path }}"
+    state: "present"
+    restarted: "yes"

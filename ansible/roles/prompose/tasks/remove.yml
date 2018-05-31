@@ -1,0 +1,6 @@
+---
+
+- name: Stop and remove all prompose containers
+  docker_service:
+    project_src: "{{ prompose_path }}"
+    state: absent

@@ -1,0 +1,6 @@
+---
+
+- name: Pull all images without running prompose containers
+  docker_service:
+    project_src "{{ prompose_path }}"
+    pull: "yes"
