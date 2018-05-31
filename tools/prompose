@@ -1,0 +1,117 @@
+#!/bin/bash
+
+# This script can be used to interact with prompose
+
+function usage {
+    cat <<EOF
+Usage: $0 COMMAND [option]
+
+Options:
+    --inventory, -i <inventory_path> Specify path to ansible inventory file
+    --configdir <config_path>        Specify path to directory with prompose.yml
+    --verbose, -v                    Increase verbosity of ansible-playbook
+    --help, -h                       Show this usage information
+
+Commands:
+    prechecks:                       Do pre-deployment checks for hosts
+    deploy:                          Deploy and start all prompose containers
+    stop:                            Stop all prompose containers
+    pull:                            Pull all images for containers (only pull, no running containers)
+    remove:                          Stop and remove all prompose containes
+    restart:                         Restart all prompose containers
+    scale:                           # WIP
+    list:                            # WIP: List all containers
+    top:                             # WIP: Display all running processes
+EOF
+}
+
+function process_cmd {
+    echo "$ACTION : $CMD"
+    $CMD
+    if [[ $? -ne 0 ]]; then
+        echo "Command failed $CMD"
+        exit 1
+    fi
+}
+
+SHORT_OPTS="hi:vc"
+LONG_OPTS="help,inventory:,verbose,configdir"
+ARGS=$(getopt -o "${SHORT_OPTS}" -l "${LONG_OPTS}" --name "$0" -- "$0") || { usage >&2; exit 2; }
+
+eval set -- "$ARGS"
+
+BASEDIR=$(dirname "$0")
+
+INVENTORY="${BASEDIR}/ansible/inventory/multinode"
+PLAYBOOK="${BASEDIR}/ansible/site.yml"
+VERBOSITY=
+EXTRA_OPTS=${EXTRA_OPTS}
+CONFIG_DIR="${BASEDIR}/etc/prompose.yml"
+PLAYBOOK="${BASEDIR}/ansible/site.yml"
+
+while [ "#" -gt 0 ]; do
+    case "$1" in
+
+    (--inventory|-i)
+        INVENTORY="$2"
+        shift 2
+        ;;
+
+    (--configdir|-c)
+        CONFIG_DIR="$1"
+        shift 1
+        ;;
+
+    (--verbose|-v)
+        VERBOSITY="$VERBOSITY --verbose"
+        shift 1
+        ;;
+
+    (--help|-h)
+        usage
+        shift
+        exit 0
+        ;;
+    (--)
+        shift
+        break
+        ;;
+esac
+done
+
+case "$1" in
+
+(deploy)
+    ACTION="Deploying prompose containers with docker-compose"
+    EXTRA_OPTS="${EXTRA_OPTS} -e prom_action=deploy"
+
+(stop)
+    ACTION="Stopping all prompose containers"
+
+(pull)
+    ACTION="Pull all images without running containers"
+
+(remove)
+    ACTION="Stop and remove all prompose containers"
+
+(scale)
+    ACTION="Scale service in docker-compose"
+
+(restart)
+    ACTION="Restart all prompose containers"
+
+(list)
+    ACTION="Listing all prompose containers"
+
+(top)
+    ACTION="Display all running processes"
+
+(*)
+    usage
+    exit 0
+    ;;
+esac
+
+CONFIG_OPTS="-e @${CONFIG_DIR}/prompose.yml"
+CMD="ansible-playbook -i $INVENTORY $CONFIG_OPTS $EXTRA_OPTS $PLAYBOOK $VERBOSITY"
+process_cmd

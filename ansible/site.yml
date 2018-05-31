@@ -6,8 +6,30 @@
     - role: docker
       when: install_docker | bool and install_docker_compose | bool
 
-- name: Apply role Prompose
+- name: Deploy Prompose
   hosts: all
   remote_user: root
   roles:
     - role: prompose
+      when: prom_action == "deploy"
+
+- name: Stop Prompose
+  hosts: all
+  remote_user: root
+  roles:
+    - role: prompose
+      when: prom_action == "stop"
+
+- name: Pull images
+  hosts: all
+  remote_user: root
+  roles:
+    - role: prompose
+      when: prom_action == "pull"
+
+- name: Remove Prompose
+  hosts: all
+  remote_user: root
+  roles:
+    - role: prompose
+      when: prom_action == "remove"
