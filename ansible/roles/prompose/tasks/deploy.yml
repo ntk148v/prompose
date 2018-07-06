@@ -1,6 +1,4 @@
 ---
-# Should have a precheck here, check if docker and docker-compose are enabled
-# Register var these steps, skip if folder or file exited
 - name: Create prompose directory
   file:
     path: "{{ prompose_path }}"
@@ -8,7 +6,7 @@
     mode: 0755
   become: true
 
-- name: Copy docker-compose
+- name: Copy docker-compose file
   template:
     src: "prompose/docker-compose.yml.j2"
     dest: "{{ prompose_path }}/docker-compose.yml"

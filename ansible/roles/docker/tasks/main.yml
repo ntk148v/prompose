@@ -53,7 +53,7 @@
   when: docker_users
 
 - name: Install Docker compose
-  get_ur:
+  get_url:
     url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-Linux-x86_64"
     dest: "{{ docker_compose_path }}"
     force: True
