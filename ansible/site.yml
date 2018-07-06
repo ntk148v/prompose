@@ -4,7 +4,9 @@
   remote_user: root
   roles:
     - role: docker
-      when: install_docker | bool and install_docker_compose | bool
+      when:
+        - install_docker | bool and install_docker_compose | bool
+        - prom_action == "installdocker"
 
 - name: Deploy Prompose
   hosts: all
@@ -33,3 +35,10 @@
   roles:
     - role: prompose
       when: prom_action == "remove"
+
+- name: Precheck target hosts
+  hosts: all
+  remote_user: root
+  roles:
+    - role: prompose
+      when: prom_action == "precheck"

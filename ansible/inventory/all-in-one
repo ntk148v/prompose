@@ -1,0 +1,31 @@
+[prometheus]
+# These hostname must be resolvable from your deployment host
+localhost       ansible_connection=local
+
+[alertmanager]
+# By default, start alertmanager service in the same host with prometheus
+localhost       ansible_connection=local
+
+[grafana]
+localhost       ansible_connection=local
+
+[unsee:children]
+alertmanager
+
+[telegram-bot:children]
+alertmanager
+
+[cadvisor]
+localhost       ansible_connection=local
+
+[node-exporter]
+localhost       ansible_connection=local
+
+[rabbit-exporter]
+localhost       ansible_connection=local
+
+[ceph-exporter]
+localhost       ansible_connection=local
+
+[snmp-exporter]
+localhost       ansible_connection=local

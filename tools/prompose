@@ -1,6 +1,12 @@
 #!/bin/bash
 
 # This script can be used to interact with prompose
+function find_base_dir {
+    local real_path=$(python -c "import os;print(os.path.realpath('$0'))")
+    local dir_name="$(dirname "$real_path")"
+    # TODO: Check in /usr/lib etc...
+    BASEDIR="$(dirname ${dir_name})"
+}
 
 function usage {
     cat <<EOF
@@ -13,15 +19,16 @@ Options:
     --help, -h                       Show this usage information
 
 Commands:
-    prechecks:                       Do pre-deployment checks for hosts
-    deploy:                          Deploy and start all prompose containers
-    stop:                            Stop all prompose containers
-    pull:                            Pull all images for containers (only pull, no running containers)
-    remove:                          Stop and remove all prompose containes
-    restart:                         Restart all prompose containers
-    scale:                           # WIP
-    list:                            # WIP: List all containers
-    top:                             # WIP: Display all running processes
+    installdocker                    Install docker & docker-compose in target hosts
+    precheck                         Do pre-deployment checks for hosts
+    deploy                           Deploy and start all prompose containers
+    stop                             Stop all prompose containers
+    pull                             Pull all images for containers (only pull, no running containers)
+    remove                           Stop and remove all prompose containes
+    restart                          Restart all prompose containers
+    scale                            # WIP
+    list                             # WIP: List all containers
+    top                              # WIP: Display all running processes
 EOF
 }
 
@@ -40,71 +47,99 @@ ARGS=$(getopt -o "${SHORT_OPTS}" -l "${LONG_OPTS}" --name "$0" -- "$0") || { usa
 
 eval set -- "$ARGS"
 
-BASEDIR=$(dirname "$0")
+find_base_dir
 
-INVENTORY="${BASEDIR}/ansible/inventory/multinode"
+INVENTORY="${BASEDIR}/ansible/inventory/all-in-one"
 PLAYBOOK="${BASEDIR}/ansible/site.yml"
 VERBOSITY=
 EXTRA_OPTS=${EXTRA_OPTS}
-CONFIG_DIR="${BASEDIR}/etc/prompose.yml"
+# CONFIG_DIR="${BASEDIR}/etc/"
+CONFIG_DIR="/etc/prompose/"
 PLAYBOOK="${BASEDIR}/ansible/site.yml"
 
-while [ "#" -gt 0 ]; do
+while [ "$#" -gt 0 ]; do
     case "$1" in
 
     (--inventory|-i)
-        INVENTORY="$2"
-        shift 2
-        ;;
+            INVENTORY="$2"
+            shift 2
+            ;;
 
     (--configdir|-c)
-        CONFIG_DIR="$1"
-        shift 1
-        ;;
+            CONFIG_DIR="$1"
+            shift 1
+            ;;
 
     (--verbose|-v)
-        VERBOSITY="$VERBOSITY --verbose"
-        shift 1
-        ;;
+            VERBOSITY="$VERBOSITY --verbose"
+            shift 1
+            ;;
 
     (--help|-h)
-        usage
-        shift
-        exit 0
-        ;;
+            usage
+            shift
+            exit 0
+            ;;
+
     (--)
-        shift
-        break
-        ;;
+            shift
+            break
+            ;;
+
+    (*)
+            echo 'error'
+            exit 3
+            ;;
 esac
 done
 
 case "$1" in
 
+(installdocker)
+    ACTION="Install docker & docker-compose in target hosts"
+    EXTRA_OPTS="${EXTRA_OPTS} -e prom_action=installdocker"
+    ;;
+
 (deploy)
     ACTION="Deploying prompose containers with docker-compose"
     EXTRA_OPTS="${EXTRA_OPTS} -e prom_action=deploy"
+    ;;
 
 (stop)
     ACTION="Stopping all prompose containers"
+    EXTRA_OPTS="${EXTRA_OPTS} -e prom_action=stop"
+    ;;
 
 (pull)
     ACTION="Pull all images without running containers"
+    EXTRA_OPTS="${EXTRA_OPTS} -e prom_action=pull"
+    ;;
 
 (remove)
     ACTION="Stop and remove all prompose containers"
+    EXTRA_OPTS="${EXTRA_OPTS} -e prom_action=remove"
+    ;;
 
 (scale)
     ACTION="Scale service in docker-compose"
+    ;;
 
 (restart)
     ACTION="Restart all prompose containers"
+    ;;
 
 (list)
     ACTION="Listing all prompose containers"
+    ;;
 
 (top)
     ACTION="Display all running processes"
+    ;;
+
+(precheck)
+    ACTION="Precheck port and docker installation in target hosts"
+    EXTRA_OPTS="${EXTRA_OPTS} -e prom_action=precheck"
+    ;;
 
 (*)
     usage
