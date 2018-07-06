@@ -1,0 +1,83 @@
+---
+- name: Ensure docker service is running
+  service:
+    name: "docker"
+    state: "started"
+    enabled: "yes"
+
+- name: Ensure docker-compose executable file exists
+  shell: docker-compose version
+  register: docker_compose_file
+  ignore_erros: yes
+
+- name: Check free port for Prometheus
+  wait_for:
+    host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+    port: "{{ prometheus_port }}"
+    connection_timeout: 1
+    timeout: 1
+    state: stopped
+  when:
+    - inventory_hostname in groups['prometheus']
+
+- name: Check free port for Alertmanager
+  wait_for:
+    host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+    port: "{{ alertmanager_port }}"
+    connection_timeout: 1
+    timeout: 1
+    state: stopped
+  when:
+    - inventory_hostname in groups['alertmanager']
+
+- name: Check free port for Node exporter
+  wait_for:
+    host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+    port: "{{ node_exporter_port }}"
+    connection_timeout: 1
+    timeout: 1
+    state: stopped
+  when:
+    - inventory_hostname in groups['node-exporter']
+
+- name: Check free port for Cadvisor
+  wait_for:
+    host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+    port: "{{ cadvisor_port }}"
+    connection_timeout: 1
+    timeout: 1
+    state: stopped
+  when:
+    - inventory_hostname in groups['cadvisor']
+
+- name: Check free port for Ceph exporter
+  wait_for:
+    host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+    port: "{{ ceph_exporter_port }}"
+    connection_timeout: 1
+    timeout: 1
+    state: stopped
+  when:
+    - inventory_hostname in groups['ceph-exporter']
+
+- name: Check free port for Grafana
+  wait_for:
+    host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+    port: "{{ grafana_port }}"
+    connection_timeout: 1
+    timeout: 1
+    state: stopped
+  when:
+    - inventory_hostname in groups['grafana']
+
+- name: Check free port for Rabbit exporter
+  wait_for:
+    host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+    port: "{{ rabbit_exporter_port }}"
+    connection_timeout: 1
+    timeout: 1
+    state: stopped
+  when:
+    - inventory_hostname in groups['rabbit-exporter']
+
+# TODO: Check free port for snmp exporter, mysql exporter, unsee (but I am too lazy...)
