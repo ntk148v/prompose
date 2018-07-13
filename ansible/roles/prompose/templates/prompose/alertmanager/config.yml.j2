@@ -18,11 +18,11 @@ receivers:
         url: "http://{{ groups['telegram-bot'][0] }}:{{ telegram_bot_port }}"
 {% endif %}
 
-{% if alert_via_mail | bool %}
+{% if alert_via_email | bool %}
     email_configs:
       - to: "{{ alert_mail_account }}"
         from: "{{ alert_mail_account }}"
-        smarthost: "{{ alert_mail_host:alert_mail_port }}"
+        smarthost: "{{ alert_mail_host }}:{{ alert_mail_port }}"
         auth_username: "{{ alert_mail_account }}"
         auth_identity: "{{ alert_mail_account }}"
         auth_password: "{{ alert_mail_password }}"

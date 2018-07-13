@@ -55,7 +55,7 @@
   file:
     path: "{{ prompose_path }}/prometheus"
     state: "directory"
-    mode: 0755
+    mode: 0777
   become: true
   when:
     - inventory_hostname in groups['prometheus']
@@ -69,8 +69,8 @@
     - inventory_hostname in groups['prometheus']
 
 - name: Copy alert.rules
-  template:
-    src: "prompose/prometheus/alert.rules"
+  copy:
+    src: "../templates/prompose/prometheus/alert.rules"
     dest: "{{ prompose_path }}/prometheus/alert.rules"
     mode: 0644
   when:
@@ -80,6 +80,7 @@
   file:
     path: "{{ prompose_path }}/alertmanager"
     state: "directory"
+    mode: 0777
   become: true
   when:
     - inventory_hostname in groups['alertmanager']

@@ -38,7 +38,7 @@ scrape_configs:
     scrape_interval: 5s
 
     static_configs:
-      - targets: [{% for host in groups['prometheus'] %}'{{ host:prometheus_port }}'{%- if not loop.last, -%},{% endif %}{% endfor %}]
+      - targets: [{% for host in groups['prometheus'] %}"{{ host }}:{{ prometheus_port }}"{% if not loop.last %},{% endif %}{% endfor %}]
 
 {% if inventory_hostname in groups['cadvisor'] and enable_cadvisor | bool %}
   - job_name: 'cadvisor'
@@ -47,7 +47,7 @@ scrape_configs:
     scrape_interval: 5s
 
     static_configs:
-      - targets: [{% for host in groups['cadvisor'] %}'{{ host:cadvisor_port }}'{%- if not loop.last, -%},{% endif %}{% endfor %}]
+      - targets: [{% for host in groups['cadvisor'] %}"{{ host }}:{{ cadvisor_port }}"{% if not loop.last %},{% endif %}{% endfor %}]
 {% endif %}
 
 {% if inventory_hostname in groups['node-exporter'] and enable_node_exporter | bool %}
@@ -57,7 +57,7 @@ scrape_configs:
     scrape_interval: 5s
 
     static_configs:
-      - targets: [{% for host in groups['node-exporter'] %}'{{ host:node_exporter_port }}'{%- if not loop.last, -%},{% endif %}{% endfor %}]
+      - targets: [{% for host in groups['node-exporter'] %}"{{ host }}:{{ node_exporter_port }}"{% if not loop.last %},{% endif %}{% endfor %}]
 {% endif %}
 
 # NOTE(kiennt): I couldn't make it work correctly. Comment these lines until I find a way to deal with it.
@@ -87,7 +87,7 @@ scrape_configs:
     scrape_interval: 5s
 
     static_configs:
-      - targets: [{% for host in groups['ceph-exporter'] %}'{{ host:ceph_exporter_port }}'{%- if not loop.last, -%},{% endif %}{% endfor %}]
+      - targets: [{% for host in groups['ceph-exporter'] %}"{{ host }}:{{ ceph_exporter_port }}"{% if not loop.last %},{% endif %}{% endfor %}]
 {% endif %}
 
 {% if inventory_hostname in groups['rabbit-exporter'] and enable_rabbit_exporter | bool %}
@@ -96,5 +96,5 @@ scrape_configs:
     # Override the global default and scrape targets from this job every 5 seconds
     scrape_interval: 5s
     static_configs:
-      - targets: [{% for host in groups['rabbit-exporter'] %}'{{ host:rabbit_exporter_port }}'{%- if not loop.last, -%},{% endif %}{% endfor %}]
+      - targets: [{% for host in groups['rabbit-exporter'] %}"{{ host }}:{{ rabbit_exporter_port }}"{% if not loop.last %},{% endif %}{% endfor %}]
 {% endif %}
