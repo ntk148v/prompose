@@ -14,7 +14,7 @@ Usage: $0 COMMAND [option]
 
 Options:
     --inventory, -i <inventory_path> Specify path to ansible inventory file
-    --configdir <config_path>        Specify path to directory with prompose.yml
+    --configdir, -c <config_path>    Specify path to directory with prompose.yml
     --verbose, -v                    Increase verbosity of ansible-playbook
     --help, -h                       Show this usage information
 
@@ -41,9 +41,9 @@ function process_cmd {
     fi
 }
 
-SHORT_OPTS="hi:vc"
-LONG_OPTS="help,inventory:,verbose,configdir"
-ARGS=$(getopt -o "${SHORT_OPTS}" -l "${LONG_OPTS}" --name "$0" -- "$0") || { usage >&2; exit 2; }
+SHORT_OPTS="hvi:c:"
+LONG_OPTS="help,verbose,invetory:configdir:"
+ARGS=$(getopt -o "${SHORT_OPTS}" -l "${LONG_OPTS}" --name "$0" -- "$@") || { usage >&2; exit 2; }
 
 eval set -- "$ARGS"
 
@@ -54,7 +54,7 @@ PLAYBOOK="${BASEDIR}/ansible/site.yml"
 VERBOSITY=
 EXTRA_OPTS=${EXTRA_OPTS}
 # CONFIG_DIR="${BASEDIR}/etc/"
-CONFIG_DIR="/etc/prompose/"
+CONFIG_DIR="/etc/prompose"
 PLAYBOOK="${BASEDIR}/ansible/site.yml"
 
 while [ "$#" -gt 0 ]; do
@@ -66,13 +66,13 @@ while [ "$#" -gt 0 ]; do
             ;;
 
     (--configdir|-c)
-            CONFIG_DIR="$1"
-            shift 1
+            CONFIG_DIR="$2"
+            shift 2
             ;;
 
     (--verbose|-v)
             VERBOSITY="$VERBOSITY --verbose"
-            shift 1
+            shift
             ;;
 
     (--help|-h)
