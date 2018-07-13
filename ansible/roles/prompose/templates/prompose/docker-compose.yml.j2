@@ -65,8 +65,8 @@ services:
       - {{ alertmanager_container_name }}
     restart: on-failure
     environment:
-      ALERTMANAGER_URI: http://{{ groups['alertmanager'][0] }}:{{ alertmanager_port }}
-      PORT: {{ unsee_dashboard_port }}
+      ALERTMANAGER_URI=http://{{ groups['alertmanager'][0] }}:{{ alertmanager_port }}
+      PORT="{{ unsee_dashboard_port }}"
     ports:
       - {{ unsee_dashboard_port }}:{{ unsee_dashboard_port }}
     networks:
@@ -82,12 +82,12 @@ services:
     depends_on:
       - {{ alertmanager_container_name }}
     environment:
-      ALERTMANAGER_URL: http://{{ groups['alertmanager'][0] }}:9093
-      LISTEN_ADDR: 0.0.0.0:8080
-      BOLT_PATH: /data/bot.db
-      STORE: bolt
-      TELEGRAM_ADMIN: {{ alert_telegram_admin }}
-      TELEGRAM_TOKEN: {{ alert_telegram_token }}
+      ALERTMANAGER_URL="http://{{ groups['alertmanager'][0] }}:9093"
+      LISTEN_ADDR=0.0.0.0:8080
+      BOLT_PATH=/data/bot.db
+      STORE=bolt
+      TELEGRAM_ADMIN="{{ alert_telegram_admin }}"
+      TELEGRAM_TOKEN="{{ alert_telegram_token }}"
     volumes:
       - telegram_bot_data:/data
     networks:
@@ -172,12 +172,12 @@ services:
     ports:
       - {{ rabbit_exporter_port }}:{{ rabbit_exporter_port }}
     environment:
-      RABBIT_URL: "{{ rabbit_url }}"
-      RABBIT_USER: "{{ rabbit_user }}"
-      RABBIT_PASSWORD: "{{ rabbit_password }}"
-      PUBLISH_PORT: "{{ rabbit_exporter_port }}"
-      OUTPUT_FORMAT: "{{ rabbit_output_format }}"
-      LOG_LEVEL: "{{ rabbit_log_level }}"
+      RABBIT_URL="{{ rabbit_url }}"
+      RABBIT_USER="{{ rabbit_user }}"
+      RABBIT_PASSWORD="{{ rabbit_password }}"
+      PUBLISH_PORT="{{ rabbit_exporter_port }}"
+      OUTPUT_FORMAT="{{ rabbit_output_format }}"
+      LOG_LEVEL="{{ rabbit_log_level }}"
     networks:
       - monitor-net
     labels:
@@ -192,9 +192,9 @@ services:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning/:/etc/grafana/provisioning/
     environment:
-      - GF_SECURITY_ADMIN_USER: {{ grafana_user }}
-      - GF_SECURITY_ADMIN_PASSWORD: {{ grafana_password }}
-      - GF_USERS_ALLOW_SIGN_UP: False
+      - GF_SECURITY_ADMIN_USER="{{ grafana_user }}"
+      - GF_SECURITY_ADMIN_PASSWORD="{{ grafana_password }}"
+      - GF_USERS_ALLOW_SIGN_UP=False
     restart: unless-stopped
     ports:
       - {{ grafana_port }}:3000
