@@ -42,6 +42,7 @@ enable_grafana: "{{ enable_grafana }}"
 # Unsee is alert dashboard
 enable_unsee: "{{ enable_unsee }}"
 enable_alertmanager: "{{ enable_alertmanager }}"
+enable_telegram_bot: "{{ enable_telegram_bot }}"
 
 ##################
 # Port mappings

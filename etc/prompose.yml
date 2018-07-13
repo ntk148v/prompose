@@ -25,6 +25,7 @@ enable_cadvisor: "yes"
 enable_grafana: "yes"
 enable_unsee: "no"
 enable_alertmanager: "yes"
+enable_telegram_bot: "no"
 
 ################################################################
 # Prompose path - the location that store prompose configuration
