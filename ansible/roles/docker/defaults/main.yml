@@ -16,7 +16,8 @@ docker_compose_path: /usr/local/bin/docker-compose
 # Debian/Ubuntu
 docker_apt_release_channel: stable
 docker_apt_arch: amd64
-docker apt_repository: "deb [arch={ docker_apt_arch }] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} ${{ docker_apt_release_channel }}"
+docker_apt_repository: "deb [arch={{ docker_apt_arch }}] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} {{ docker_apt_release_channel }}"
+docker_apt_ignore_key_error: True
 docker_apt_key: "9DC858229FC7DD38854AE2D88D81803C0EBFCD88"
 
 # CentOS/RedHat/Fedora
@@ -35,4 +36,4 @@ docker_daemon_options: "{{ docker_daemon_options }}"
 docker_daemon_environment: "{{ docker_daemon_environment }}"
 
 # A list of users to be added to the Docker group.
-docker_users: []
+docker_users: "{{ docker_users }}"
