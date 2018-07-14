@@ -6,8 +6,8 @@
 # Docker options
 ################
 
-# install_docker: "yes"
-# install_docker_compose: "yes"
+install_docker: "yes"
+install_docker_compose: "yes"
 # docker_registry: "10.6.9.9:4000"
 # docker_namespace: "clouldlab"
 # docker_registry_username: "cloud"

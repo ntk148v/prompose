@@ -1,4 +1,5 @@
 ---
+install_docker: "{{ install_docker }}"
 # docker_edition can be 'ce', 'ee'.
 docker_edition: "ce"
 docker_pkg: "docker-{{ docker_edition }}"
@@ -9,7 +10,7 @@ docker_service_state: started
 docker_service_enabled: yes
 
 # Docker Compose
-docker_install_docker_compose: True
+install_docker_compose: "{{ install_docker_compose }}"
 docker_compose_version: "1.21.2"
 docker_compose_path: /usr/local/bin/docker-compose
 
