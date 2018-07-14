@@ -1,4 +1,25 @@
 ---
+- name: Install python-pip
+  package:
+    name: python-pip
+    state: present
+
+- name: Install python-dev
+  package:
+    name: python-dev
+    state: present
+
+- name: Install docker-py via pip
+  pip:
+    name: docker
+
+# NOTE(kiennt): Ansible docker module uses docker-compose as python library
+#               so that docker-compose execuable file won't work in this case.
+#               We have to install docker-compose via pip.
+- name: Install docker-compose via pip
+  pip:
+    name: docker-compose
+
 - name: Create prompose directory
   file:
     path: "{{ prompose_path }}"
