@@ -7,7 +7,9 @@
 ################
 
 install_docker: "yes"
-install_docker_compose: "yes"
+# Don't install docker_compose via get executable file. Docker-compose will be installed via pip
+# in prompose role. If you just want to install docker-compose like executable file, set it to 'yes'
+install_docker_compose: "no"
 # docker_registry: "10.6.9.9:4000"
 # docker_namespace: "clouldlab"
 # docker_registry_username: "cloud"

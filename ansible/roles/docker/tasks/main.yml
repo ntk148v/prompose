@@ -60,4 +60,4 @@
     owner: root
     group: root
     mode: 0755
-  when: install_docker_compose
+  when: install_docker_compose | bool
