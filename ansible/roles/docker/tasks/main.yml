@@ -20,7 +20,6 @@
     path: "/etc/systemd/system"
     state: directory
     owner: root
-    owner: root
     mode: 0755
 
 - name: Generate systemd unit file
