@@ -87,6 +87,7 @@ cadvisor_container_name: "cadvisor"
 ceph_exporter_container_name: "ceph-exporter"
 snmp_exporter_container_name: "snmp-exporter"
 telegram_bot_container_name: "telegram-bot"
+rabbit_exporter_container_name: "rabbit-exporter"
 
 ####################
 # Prometheus options

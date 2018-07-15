@@ -8,7 +8,23 @@
 - name: Ensure docker-compose executable file exists
   shell: docker-compose version
   register: docker_compose_file
-  ignore_erros: yes
+
+- name: Get containers facts
+  docker_container_facts:
+    name:
+      - "{{ prometheus_container_name }}"
+      - "{{ alertmanager_container_name if enable_alertmanager | bool else '' }}"
+      - "{{ node_exporter_container_name if enable_node_exporter | bool else '' }}"
+      - "{{ cadvisor_container_name if enable_cadvisor | bool else '' }}"
+      - "{{ ceph_exporter_container_name if enable_ceph_exporter | bool else '' }}"
+      - "{{ grafana_container_name if enable_grafana | bool else '' }}"
+      - "{{ rabbit_exporter_container_name if enable_rabbit_exporter | bool else '' }}"
+      - "{{ unsee_container_name if enable_unsee | bool else '' }}"
+      - "{{ telegram_bot_container_name if enable_telegram_bot else '' }}"
+  register:
+    prompose_container_facts
+
+- set_fact: prometheus_container_name={{ prometheus_container_name }}
 
 - name: Check free port for Prometheus
   wait_for:
@@ -16,9 +32,10 @@
     port: "{{ prometheus_port }}"
     connect_timeout: 1
     timeout: 1
-    state: stopped
+    state: "stopped"
   when:
     - inventory_hostname in groups['prometheus']
+    - prompose_container_facts[prometheus_container_name] is not defined
 
 - name: Check free port for Alertmanager
   wait_for:
@@ -26,9 +43,10 @@
     port: "{{ alertmanager_port }}"
     connect_timeout: 1
     timeout: 1
-    state: stopped
+    state: "stopped"
   when:
     - inventory_hostname in groups['alertmanager']
+    - prompose_container_facts[alertmanager_container_name] is not defined
 
 - name: Check free port for Node exporter
   wait_for:
@@ -36,8 +54,9 @@
     port: "{{ node_exporter_port }}"
     connect_timeout: 1
     timeout: 1
-    state: stopped
+    state: "stopped"
   when:
+    - prompose_container_facts[node_exporter_container_name] is not defined
     - inventory_hostname in groups['node-exporter']
 
 - name: Check free port for Cadvisor
@@ -46,8 +65,9 @@
     port: "{{ cadvisor_port }}"
     connect_timeout: 1
     timeout: 1
-    state: stopped
+    state: "stopped"
   when:
+    - prompose_container_facts[cadvisor_container_name] is not defined
     - inventory_hostname in groups['cadvisor']
 
 - name: Check free port for Ceph exporter
@@ -56,8 +76,9 @@
     port: "{{ ceph_exporter_port }}"
     connect_timeout: 1
     timeout: 1
-    state: stopped
+    state: "stopped"
   when:
+    - prompose_container_facts[ceph_exporter_container_name] is not defined
     - inventory_hostname in groups['ceph-exporter']
 
 - name: Check free port for Grafana
@@ -66,8 +87,9 @@
     port: "{{ grafana_port }}"
     connect_timeout: 1
     timeout: 1
-    state: stopped
+    state: "stopped"
   when:
+    - prompose_container_facts[grafana_container_name] is not defined
     - inventory_hostname in groups['grafana']
 
 - name: Check free port for Rabbit exporter
@@ -76,8 +98,31 @@
     port: "{{ rabbit_exporter_port }}"
     connect_timeout: 1
     timeout: 1
-    state: stopped
+    state: "stopped"
   when:
+    - prompose_container_facts[rabbit_exporter_container_name] is not defined
     - inventory_hostname in groups['rabbit-exporter']
 
-# TODO: Check free port for snmp exporter, mysql exporter, unsee (but I am too lazy...)
+- name: Check free port for Unsee
+  wait_for:
+    host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+    port: "{{ unsee_dashboard_port }}"
+    connect_timeout: 1
+    timeout: 1
+    state: "stopped"
+  when:
+    - prompose_container_facts[unsee_container_name] is not defined
+    - inventory_hostname in groups['unsee']
+
+- name: Check free port for Telegram bot
+  wait_for:
+    host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+    port: "{{ telegram_bot_port }}"
+    connect_timeout: 1
+    timeout: 1
+    state: "stopped"
+  when:
+    - prompose_container_facts[telegram_bot_container_name] is not defined
+    - inventory_hostname in groups['telegram-bot']
+
+
