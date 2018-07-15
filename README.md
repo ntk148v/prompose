@@ -2,6 +2,8 @@
 
 ## Overview
 
+* Inspired by [OpenStack Kolla-ansible](https://github.com/openstack/kolla-ansible): You can recognize that Prompose is very similar with Kolla-ansible.
+
 * Install [Docker](https://www.docker.com/) and [Docker-compose](https://docs.docker.com/compose/) in multiple hosts.
 
 * Easily configure and deploy containerized [Prometheus](https://prometheus.io) stack: Prometheus, Alertmanager,  its [exporter](https://prometheus.io/docs/instrumenting/exporters/), [Telegram Bot for Prometheus's Alertmanager](https://github.com/metalmatze/alertmanager-bot) and [Grafana](https://grafana.com/) in multiple hosts.
