@@ -1,3 +1,5 @@
 ---
-- include: "config.yml"
-- include: "{{ prom_action }}.yml"
+- include_tasks: "config.yml"
+  when: prom_action != 'precheck' # Do not run config in precheck phase
+
+- include_tasks: "{{ prom_action }}.yml"
