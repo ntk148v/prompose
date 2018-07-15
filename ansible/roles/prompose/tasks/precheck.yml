@@ -14,7 +14,7 @@
   wait_for:
     host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
     port: "{{ prometheus_port }}"
-    connection_timeout: 1
+    connect_timeout: 1
     timeout: 1
     state: stopped
   when:
@@ -24,7 +24,7 @@
   wait_for:
     host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
     port: "{{ alertmanager_port }}"
-    connection_timeout: 1
+    connect_timeout: 1
     timeout: 1
     state: stopped
   when:
@@ -34,7 +34,7 @@
   wait_for:
     host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
     port: "{{ node_exporter_port }}"
-    connection_timeout: 1
+    connect_timeout: 1
     timeout: 1
     state: stopped
   when:
@@ -44,7 +44,7 @@
   wait_for:
     host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
     port: "{{ cadvisor_port }}"
-    connection_timeout: 1
+    connect_timeout: 1
     timeout: 1
     state: stopped
   when:
@@ -54,7 +54,7 @@
   wait_for:
     host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
     port: "{{ ceph_exporter_port }}"
-    connection_timeout: 1
+    connect_timeout: 1
     timeout: 1
     state: stopped
   when:
@@ -64,7 +64,7 @@
   wait_for:
     host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
     port: "{{ grafana_port }}"
-    connection_timeout: 1
+    connect_timeout: 1
     timeout: 1
     state: stopped
   when:
@@ -74,7 +74,7 @@
   wait_for:
     host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
     port: "{{ rabbit_exporter_port }}"
-    connection_timeout: 1
+    connect_timeout: 1
     timeout: 1
     state: stopped
   when:
