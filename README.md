@@ -18,7 +18,7 @@
 
 ## Usage guide
 
-* Firstly, you have to install ansible (>=2.4) in your management host. There are multiple ways to install ansible, but you simply use [./requirements.txt](requirements.txt). You should have `python-pip` and `python-dev` as well.
+* Firstly, you have to install ansible (>=2.4) in your management host. There are multiple ways to install ansible, but you simply use [requirements.txt](./requirements.txt). You should have `python-pip` and `python-dev` as well.
 
 ```
 $ sudo pip install -r requirements.txt
