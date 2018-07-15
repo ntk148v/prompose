@@ -1,5 +1,7 @@
 ---
+
 - name: Run docker-compose
-    project_src "{{ prompose_path }}"
+  docker_service:
+    project_src: "{{ prompose_path }}"
     state: present
     recreate: "smart"

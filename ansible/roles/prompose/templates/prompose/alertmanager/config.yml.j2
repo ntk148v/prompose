@@ -2,11 +2,12 @@ route:
   receiver: 'custom_alert'
 
 receivers:
-  - name: 'cutom_alert'
+  - name: 'custom_alert'
 {% if alert_via_slack | bool %}
     slack_configs:
       - send_resolved: true
-        text: {% raw %}"{{ .CommonAnnotations.description }}"{% endraw %}
+        text: {% raw %}"{{ .CommonAnnotations.description }}"{% endraw %} # Need a blank line like this for seperate these two lines
+
         username: 'Prometheus'
         channel: "{{ alert_slack_channel }}"
         api_url: "https://hooks.slack.com/services/{{ alert_slack_webhook_id }}"
