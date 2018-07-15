@@ -17,6 +17,8 @@ Options:
     --configdir, -c <config_path>    Specify path to directory with prompose.yml
     --verbose, -v                    Increase verbosity of ansible-playbook
     --help, -h                       Show this usage information
+    --images                         Remove images when this option is defined and command is remove
+    --volumes                        Remove volumes when this option is defined and command is remove
 
 Commands:
     installdocker                    Install docker & docker-compose in target hosts
@@ -24,11 +26,9 @@ Commands:
     deploy                           Deploy and start all prompose containers
     stop                             Stop all prompose containers
     pull                             Pull all images for containers (only pull, no running containers)
-    remove                           Stop and remove all prompose containes
+    remove                           Stop and remove all prompose containes (With --images - remove images and --volumes - remove volumes)
     restart                          Restart all prompose containers
     scale                            # WIP
-    list                             # WIP: List all containers
-    top                              # WIP: Display all running processes
 EOF
 }
 
@@ -42,7 +42,7 @@ function process_cmd {
 }
 
 SHORT_OPTS="hvi:c:"
-LONG_OPTS="help,verbose,invetory:configdir:"
+LONG_OPTS="help,verbose,invetory:,configdir:,images,volumes"
 ARGS=$(getopt -o "${SHORT_OPTS}" -l "${LONG_OPTS}" --name "$0" -- "$@") || { usage >&2; exit 2; }
 
 eval set -- "$ARGS"
@@ -53,9 +53,10 @@ INVENTORY="${BASEDIR}/ansible/inventory/all-in-one"
 PLAYBOOK="${BASEDIR}/ansible/site.yml"
 VERBOSITY=
 EXTRA_OPTS=${EXTRA_OPTS}
-# CONFIG_DIR="${BASEDIR}/etc/"
 CONFIG_DIR="/etc/prompose"
 PLAYBOOK="${BASEDIR}/ansible/site.yml"
+REMOVE_IMAGES="none"
+REMOVE_VOLUMES=false
 
 while [ "$#" -gt 0 ]; do
     case "$1" in
@@ -81,11 +82,19 @@ while [ "$#" -gt 0 ]; do
             exit 0
             ;;
 
+    (--images)
+            REMOVE_IMAGES="all"
+            shift
+            ;;
+
+    (--volumes)
+            REMOVE_VOLUMES=true
+            shift
+            ;;
     (--)
             shift
             break
             ;;
-
     (*)
             echo 'error'
             exit 3
@@ -117,7 +126,7 @@ case "$1" in
 
 (remove)
     ACTION="Stop and remove all prompose containers"
-    EXTRA_OPTS="${EXTRA_OPTS} -e prom_action=remove"
+    EXTRA_OPTS="${EXTRA_OPTS} -e prom_action=remove -e remove_images=${REMOVE_IMAGES} -e remove_volumes=${REMOVE_VOLUMES}"
     ;;
 
 (scale)
@@ -128,13 +137,6 @@ case "$1" in
     ACTION="Restart all prompose containers"
     ;;
 
-(list)
-    ACTION="Listing all prompose containers"
-    ;;
-
-(top)
-    ACTION="Display all running processes"
-    ;;
 
 (precheck)
     ACTION="Precheck port and docker installation in target hosts"

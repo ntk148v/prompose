@@ -4,3 +4,5 @@
   docker_service:
     project_src: "{{ prompose_path }}"
     state: absent
+    remove_images: "{{ remove_images }}"
+    remove_volumes: "{{ remove_volumes }}"
