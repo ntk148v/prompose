@@ -13,19 +13,25 @@ docker_registry:
 docker_namespace:
 docker_registry_username: "{{ docker_registry_username }}"
 docker_registry_password: "{{ docker_registry_password }}"
+# Sets the options used by DNS resolvers by writing an options line
+# into the container's /etc/resolv.conf.
+# For example:
+# docker_dns_servers:
+#   - "8.8.8.8"
+#   - "8.8.4.4"
 docker_dns_servers:
+# Change Docker storage drivers
+# For example: docker_storage_driver: "overlay2"
+docker_storage_driver:
+# Change runtime directory
+# For example: docker_runtime_directory: "/var/lib/docker
+docker_runtime_directory:
 # Can be used to set environment variables for the Docker daemon, such as:
 # docker_daemon_environment:
 #   - "HTTP_PROXY=http://proxy.example.com:3128/"
 #   - "HTTPS_PROXY=http://proxy.example.com:3128/"
 #   - "NO_PROXY=localhost,127.0.0.1"
 docker_daemon_environment: []
-# Docker daemon options as they would appear on the command line, such as:
-# docker_daemon_options:
-#   - "--dns 8.8.8.8"
-docker_daemon_options:
-  - "{{ '--insecure-registry {{ docker_registry }}' if docker_registry else '' }}"
-  - "{{ '--dns {{ docker_dns_servers }}' if docker_dns_servers else '' }}"
 # A set of users will be added to docker group
 docker_users: []
 

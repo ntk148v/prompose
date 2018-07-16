@@ -31,11 +31,22 @@
     mode: 0644
   register: docker_register_systemd_service
 
+- name: Generate docker daemon configure file
+  template:
+    src: "daemon.json.j2"
+    dest: "/etc/docker/daemon.json"
+    owner: root
+    group: root
+    mode: 0644
+  register: docker_register_daemon
+
 - name: Reload systemd daemon
   command: "systemctl daemon-reload"
   notify: Restart docker
   when: (docker_register_systemd_service and
-         docker_register_systemd_service | changed)
+         docker_register_systemd_service | changed) or
+        (docker_register_daemon and
+         docker_register_daemon | changed)
 
 - name: Ensure Docker is stared and enabled at boot
   service:

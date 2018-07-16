@@ -1,0 +1,14 @@
+{
+{% if docker_registry %}
+    "insecure-registries": ["{{ docker_registry }}"],
+{% endif %}
+{% if docker_storage_driver %}
+    "storage-driver": "{{ docker_storage_driver }}",
+{% endif %}
+{% if docker_runtime_directory %}
+    "graph": "{{ docker_runtime_directory }}",
+{% endif %}
+{% if docker_dns_servers %}
+    "dns": ["{{ docker_dns_servers | join(',') }}"]
+{% endif %}
+}
