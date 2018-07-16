@@ -7,6 +7,7 @@ receivers:
     slack_configs:
       - send_resolved: true
         text: {% raw %}"{{ .CommonAnnotations.description }}"{% endraw %}
+
         username: 'Prometheus'
         channel: "{{ alert_slack_channel }}"
         api_url: "https://hooks.slack.com/services/{{ alert_slack_webhook_id }}"

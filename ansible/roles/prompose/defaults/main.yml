@@ -13,7 +13,7 @@ node_exporter_image: "{{ docker_registry ~ '/' ~ docker_namespace if docker_regi
 
 ceph_exporter_image: "{{ docker_registry ~ '/' ~ docker_namespace if docker_registry and docker_namespace else 'digitalocean' }}/cephceph_exporter:{{ ceph_exporter_img_ver }}"
 
-snmp_exporter_image: "{{ docker_registry ~ '/'  ~ docker_namesapce if docker_registry and docker_namespace else 'prom' }}/snmp-exporter:{{ snmp_exporter_img_ver }}"
+snmp_exporter_image: "{{ docker_registry ~ '/'  ~ docker_namespace if docker_registry and docker_namespace else 'prom' }}/snmp-exporter:{{ snmp_exporter_img_ver }}"
 
 rabbit_exporter_image: "{{ docker_registry ~ '/' ~ docker_namespace if docker_registry and docker_namespace else 'kbudde' }}/rabbitmq-exporter:{{ rabbit_exporter_img_ver }} "
 
