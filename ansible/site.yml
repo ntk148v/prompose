@@ -5,7 +5,6 @@
   roles:
     - role: docker
       when:
-        - install_docker | bool and install_docker_compose | bool
         - prom_action == "installdocker"
 
 - name: Deploy Prompose

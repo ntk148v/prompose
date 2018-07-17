@@ -6,7 +6,7 @@
   with_items:
     - docker
     - docker-common
-    - docker-engin
+    - docker-engine
 
 - name: Add Docker"s official GPG key
   rpm_key:

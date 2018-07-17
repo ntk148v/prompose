@@ -9,6 +9,7 @@
   package:
     name: "{{ docker_pkg }}"
     state: "{{ docker_pkg_state }}"
+  when: install_docker | bool
 
 - name: Remove Upstart config file
   file:
