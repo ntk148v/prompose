@@ -55,7 +55,7 @@ VERBOSITY=
 EXTRA_OPTS=${EXTRA_OPTS}
 CONFIG_DIR="/etc/prompose"
 PLAYBOOK="${BASEDIR}/ansible/site.yml"
-REMOVE_IMAGES="none"
+REMOVE_IMAGES=false
 REMOVE_VOLUMES=false
 
 while [ "$#" -gt 0 ]; do
@@ -83,7 +83,7 @@ while [ "$#" -gt 0 ]; do
             ;;
 
     (--images)
-            REMOVE_IMAGES="all"
+            REMOVE_IMAGES=true
             shift
             ;;
 
