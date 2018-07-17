@@ -1,14 +1,16 @@
 ---
 
-- name: Stop and remove all prompose containers
+- name: Stop and remove all prompose containers (Without remove images)
   docker_service:
     project_src: "{{ prompose_path }}"
     state: absent
     remove_volumes: "{{ remove_volumes }}"
+  when: not remove_images | bool
 
-- name: Remove all images
+- name: Stop, remove all prompose containers and images
   docker_service:
     project_src: "{{ prompose_path }}"
     state: absent
     remove_images: "all" # value of remove_images must be one of: all, local, not yes no options.
-  when: remove_images
+    remove_volumes: "{{ remove_volumes }}"
+  when: remove_images | bool
