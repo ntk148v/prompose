@@ -60,3 +60,9 @@ Commands:
 ```
 
 * Enjoy it!
+
+## Contribute
+
+* If you are interesed with this project, feel free to create a pull request.
+
+* If you have any questions, please contact me via email `kiennt2609@gmail.com`.
