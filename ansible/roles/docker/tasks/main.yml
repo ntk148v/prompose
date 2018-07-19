@@ -23,6 +23,13 @@
     owner: root
     mode: 0755
 
+- name: Ensure docker directory exists
+  file:
+    path: "/etc/docker"
+    state: directory
+    owner: root
+    mode: 0755
+
 - name: Generate systemd unit file
   template:
     src: "docker.service.j2"
