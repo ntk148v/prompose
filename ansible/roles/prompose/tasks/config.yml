@@ -8,6 +8,13 @@
   package:
     name: python-dev
     state: present
+  when: ansible_os_family == 'Debian'
+
+- name: Install python-devel
+  package:
+    name: python-devel
+    state: present
+  when: ansible_os_family == 'RedHat'
 
 - name: Install docker-py via pip
   pip:
