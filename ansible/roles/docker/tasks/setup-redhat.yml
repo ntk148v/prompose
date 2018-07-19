@@ -5,6 +5,12 @@
     state: absent
   with_items:
     - docker
+    - docker-client
+    - docker-client-latest
+    - docker-latest
+    - docker-latest-logrotate
+    - docker-selinux
+    - docker-engine-selinux
     - docker-common
     - docker-engine
 
@@ -20,6 +26,11 @@
     owner: root
     group: root
     mode: 0644
+
+- name: Disable SELinux
+  selinux:
+    policy: targeted
+    state: disabled
 
 - name: Configure Docker Edge repo
   ini_file:
