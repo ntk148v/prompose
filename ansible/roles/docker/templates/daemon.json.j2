@@ -9,6 +9,6 @@
     "graph": "{{ docker_runtime_directory }}",
 {% endif %}
 {% if docker_dns_servers %}
-    "dns": ["{{ docker_dns_servers | join(',') }}"]
+    "dns": ["{{ docker_dns_servers | join('","') }}"]
 {% endif %}
 }
