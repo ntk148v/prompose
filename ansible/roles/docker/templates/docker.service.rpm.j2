@@ -12,7 +12,7 @@ Type=notify
 # exists and systemd currently does not support the cgroup feature set required
 # for containers run by docker
 {% if docker_daemon_environment %}
-Environment="{{ docker_daemon_environment | join(' ') }}"
+Environment="{{ docker_daemon_environment | join('" "') }}"
 {% endif %}
 ExecStart=/usr/bin/dockerd
 ExecReload=/bin/kill -s HUP $MAINPID
