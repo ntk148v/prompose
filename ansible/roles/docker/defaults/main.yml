@@ -38,3 +38,4 @@ docker_daemon_environment: "{{ docker_daemon_environment }}"
 
 # A list of users to be added to the Docker group.
 docker_users: "{{ docker_users }}"
+docker_systemd_template: "docker.service.j2"

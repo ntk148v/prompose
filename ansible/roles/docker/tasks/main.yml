@@ -30,9 +30,14 @@
     owner: root
     mode: 0755
 
+- name: Change system unit template in RHEL/CentOS
+  set_fact:
+    docker_systemd_template: 'docker.service.rpm.j2'
+  when: ansible_os_family == 'RedHat'
+
 - name: Generate systemd unit file
   template:
-    src: "docker.service.j2"
+    src: "{{ docker_systemd_template }}"
     dest: "/etc/systemd/system/docker.service"
     owner: root
     group: root
