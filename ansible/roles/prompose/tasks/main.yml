@@ -1,5 +1,8 @@
 ---
 - include_tasks: "config.yml"
-  when: prom_action != 'precheck' # Do not run config in precheck phase
+  when:
+    - prom_action != 'precheck' # Do not run config in precheck phase
+    - prom_action != 'remove' # Do not run config in remove phase
+    - prom_action != 'stop' # Do not run config in stop phase
 
 - include_tasks: "{{ prom_action }}.yml"
