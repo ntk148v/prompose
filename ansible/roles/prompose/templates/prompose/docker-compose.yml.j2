@@ -49,7 +49,7 @@ services:
       - '--storage.path=/alertmanager'
       - '--web.external-url=http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:{{ alertmanager_port }}'
 {% if groups['alertmanager'] | length > 1 %}
-      - '--cluster.listen-address=0.0.0.0:{{ alertmanager_cluster_listen_port }}'
+      - '--cluster.advertise-address={{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:{{ alertmanager_cluster_listen_port }}'
 {% for cluster_host in groups['alertmanager'] %}
 {% if cluster_host != inventory_hostname %}
       - '--cluster.peer={{ hostvars[cluster_host]['ansible_default_ipv4']['address'] }}:{{ alertmanager_cluster_listen_port }}'
@@ -59,6 +59,9 @@ services:
     restart: unless-stopped
     ports:
       - {{ alertmanager_port }}:9093
+{% if groups['alertmanager'] | length > 1 %}
+      - {{ alertmanager_cluster_listen_port }}:9094
+{% endif %}
     networks:
       - monitor-net
     labels:
