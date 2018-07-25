@@ -48,6 +48,14 @@ services:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
       - '--web.external-url=http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:{{ alertmanager_port }}'
+{% if groups['alertmanager'] | length > 1 %}
+      - '--cluster.listen-address=0.0.0.0:{{ alertmanager_cluster_listen_port }}'
+{% for cluster_host in groups['alertmanager'] %}
+{% if cluster_host != inventory_hostname %}
+      - '--cluster.peer={{ cluster_host }}:{{ alertmanager_cluster_listen_port }}'
+{% endif %}
+{% endfor %}
+{% endif %}
     restart: unless-stopped
     ports:
       - {{ alertmanager_port }}:9093
