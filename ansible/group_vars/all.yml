@@ -70,8 +70,11 @@ grafana_port: "5555"
 # Image version
 ###############
 
+# Be careful when change these configurations.
+# Prompose has tested with these versions only,
+# change one of them may break the stack.
 prometheus_img_ver: "v2.2.1"
-alertmanager_img_ver: "v0.14.0"
+alertmanager_img_ver: "v0.15.0"
 node_exporter_img_ver: "v0.15.2"
 unsee_img_ver: "v0.9.2"
 ceph_exporter_img_ver: "1.1.0"
