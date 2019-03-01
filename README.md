@@ -15,6 +15,12 @@ Inspired by [stefanprodan/dockprom](https://github.com/stefanprodan/dockprom) & 
 ## Installation
 
 * Clone the project locally to your host.
+
+```
+$ git clone -b pure-docker-compose https://github.com/ntk148v/prompose.git
+$ cd prompose/
+```
+
 * If you would like to change which targets should be monitored or make configuration changes, update [prometheus configuration](./prometheus/prometheus.yml), replace `host_ip` with actual host address.
 * If you want to change alert rules, check [alert rules](./prometheus/alert.rules).
 * Update [alertmanager configuration](./alertmanager/config.yml).
