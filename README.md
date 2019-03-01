@@ -15,16 +15,15 @@ Inspired by [stefanprodan/dockprom](https://github.com/stefanprodan/dockprom) & 
 ## Installation
 
 * Clone the project locally to your host.
-* If you would like to change which targets should be monitored or make configuration changes, update `prometheus/prometheus.yml`.
-* If you want to change alert rules, check `prometheus/alert.rules`.
-* Update `alertmanager/config.yml`.
-* Update `prometheus/alert.rules`, define your own rules.
-* Run it!
+* If you would like to change which targets should be monitored or make configuration changes, update [prometheus configuration](./prometheus/prometheus.yml), replace `host_ip` with actual host address.
+* If you want to change alert rules, check [alert rules](./prometheus/alert.rules).
+* Update [alertmanager configuration](./alertmanager/config.yml).
+* Change `PROMETHEUS_HOST` and run it!
 
 ```
 # Install controller node (which hosts prometheus, grafana, alertmanager...)
-$ ADMIN_USER=admin ADMIN_PASSWORD=changeyopasswd docker-compose up
-# Install target nodes
+$ PROMETHEUS_HOST=sample-host ADMIN_USER=admin ADMIN_PASSWORD=changeyopasswd docker-compose up
+# Install target nodes (if needed)
 $ docker-compose -f docker-compose.exporters.yml up -d
 ```
 
